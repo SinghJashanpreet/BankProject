@@ -16,7 +16,7 @@ app.use(
 //   })
 // );
 
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 //for lc
 //mongoose.connect("mongodb://127.0.0.1:27017/borrowDB", {
