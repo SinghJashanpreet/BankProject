@@ -5,7 +5,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://loanapp.netlify.app",
+    origin: "https://loanapp1.netlify.app",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
