@@ -2,28 +2,15 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
-//lh
+
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://loanapp.netlify.app",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
-// app.use(
-//   cors({
-//     origin: "https://bankprojectbyjs.netlify.app",
-//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//   })
-// );
 
 const port = process.env.PORT || 5000;
-
-//for lc
-//mongoose.connect("mongodb://127.0.0.1:27017/borrowDB", {
-// mongoose.connect("mongodb+srv://officialkhalsajs:J@sh@njo0@cluster0.cutxstq.mongodb.net/?retryWrites=true&w=majority", {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// });
 
 
 const username = encodeURIComponent('officialkhalsajs');
