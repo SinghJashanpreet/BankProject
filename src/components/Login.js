@@ -37,16 +37,19 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
+    <div className="bg-my  h-screen flex flex-col justify-center bg-cover  text-slate-100 " >
+    <div className="border-2  border-red-500 shadow-lg flex flex-col absolute" >
+    </div>
+      <h2 className="font-bold text-[50px] flex justify-center my-[30px] items-center">Login</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
-      <input
+      <input className="text-slate-900 w-max mx-auto my-[30px] rounded-md border-transparent p-[10px] px-[50px]"
         type="text"
         placeholder="Enter your mobile number"
         value={mobileNumber}
         onChange={(e) => setMobileNumber(e.target.value)}
       />
-      <button onClick={handleLogin}>Login</button>
+      <button className="text-md border-solid border-2  mx-auto  p-[5px] px-[30px] rounded-lg  hover:bg-red-600 py-2  " onClick={handleLogin}>Login</button>
+      
     </div>
   );
 };
