@@ -59,7 +59,7 @@ const Lend = () => {
         <div className="Lamounts example">
           <ul>
             {transactions.map((transaction, index) => (
-              <li key={index} style="list-style-type:disc">
+              <li key={index} >
                 Amount: {transaction.amount} Rs. (Date: {transaction.date}) from
                 Loan Number: {parseInt(transaction.num)}
               </li>
