@@ -240,7 +240,7 @@ const Borrow = () => {
                         {get100thDayExcludingSundays(
                           borrowList.dateArray[subIndex]
                         ).toLocaleDateString()}
-                        <button
+                        <button className="viewB"
                           onClick={() => handleLendClick(borrowList, subIndex)}
                         >
                           View Transactions
