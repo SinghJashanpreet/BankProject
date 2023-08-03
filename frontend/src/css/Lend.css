@@ -1,0 +1,58 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.Lbody{
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #4070f4;
+}
+
+.Lcontainer{
+    position: absolute;
+    padding: 30px;
+    max-width: 80%;
+    height: 80%;
+    width: 100%;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0 ,0 ,0, 0.1);
+}
+.Lcontainer .Lheading{
+    position: relative;
+}
+.Lcontainer .Lamounts{
+    margin-top: 30px;
+    position: relative;
+    overflow: scroll;
+    
+}
+.Lamounts .ul .li{
+    font-size: 40px;
+}
+.Lcontainer .button{
+    position: absolute;
+    bottom: 50px;
+    right: 50px;
+    margin-top: 35px;
+}
+.Lcontainer .button input{
+    padding: 10px;
+    border: none;
+    color: #fff;
+    letter-spacing: 0.5px;
+    border-radius: 6px;
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
+    background-color: #4070f4;
+    transition: all 0.3s ease;
+}
+
+.button input:hover{
+    background-color: #265df2;
+}
