@@ -73,3 +73,7 @@
     background-color: #4070f4;
     transition: all 0.3s ease;
 }
+
+.viewB:hover{
+    background-color: #265df2;
+}
