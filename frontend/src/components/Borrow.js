@@ -86,6 +86,11 @@ const Borrow = () => {
     // Redirect to the Lend component with the selected borrow item's details
     navigate(`/lend/${mobileNumber}/${idx}`);
   };
+  function convertDateFormat(inputDate) {
+    var parts = inputDate.split('/');
+    var formattedDate = parts[1] + '/' + parts[0] + '/' + parts[2];
+    return formattedDate;
+}
 
   return (
     <div className="Bbody">
@@ -159,7 +164,7 @@ const Borrow = () => {
                           style={{ padding: "10px", border: "1px solid #ccc" }}
                         >
                           {
-                            dayjs(borrowList.dateArray[subIndex]).format('DD/MM/YYYY')
+                            convertDateFormat(borrowList.dateArray[subIndex])
                           }
                         </td>
                         <td
