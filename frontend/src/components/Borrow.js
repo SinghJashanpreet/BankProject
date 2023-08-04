@@ -136,6 +136,7 @@ const Borrow = () => {
   const [borrowList, setBorrowList] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const [error, setError] = useState("");
+  const [name , setName] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -144,6 +145,7 @@ const Borrow = () => {
       .get(`https://bank-backend7.onrender.com/api/borrow/${mobileNumber}`)
       .then((response) => {
         setBorrowList(response.data);
+        setName(response.data.name);
         // Calculate the total amount dynamically based on the borrow list
         const total = response.data.amountArray.reduce(
           (total, amount) => total + amount,
@@ -216,7 +218,7 @@ const Borrow = () => {
     <div className="Bbody">
       <div className="Bcontainer example">
         <div className="Bheading">
-          <h1 className="text-[34px] font-bold">Borrow Money</h1>
+          <h1 className="">Borrow Money ({name})</h1>
           {error && <p style={{ color: "red" }}>{error}</p>}
           <h4 className="text-[22px] font-bold">
             Total amount: {totalAmount} Rs.
@@ -263,3 +265,45 @@ const Borrow = () => {
 };
 
 export default Borrow;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// <table>
+//   <thead>
+//     <tr>
+//       <th>Amount</th>
+//       <th>Date</th>
+//       <th>Termination Date</th>
+//       <th>Actions</th>
+//     </tr>
+//   </thead>
+//   <tbody>
+//     {borrowList.amountArray.map((amount, subIndex) => (
+//       <tr key={subIndex}>
+//         <td>{amount} Rs.</td>
+//         <td>{borrowList.dateArray[subIndex]}</td>
+//         <td>
+//           {get100thDayExcludingSundays(
+//             borrowList.dateArray[subIndex]
+//           ).toLocaleDateString()}
+//         </td>
+//         <td>
+//           <button className="viewB" onClick={() => handleLendClick(borrowList, subIndex)}>
+//             View Transactions
+//           </button>
+//         </td>
+//       </tr>
+//     ))}
+//   </tbody>
+// </table>
