@@ -126,7 +126,6 @@
 
 // export default Borrow;
 
-
 // const dayjs = require('dayjs')
 // //import dayjs from 'dayjs' // ES 2015
 // dayjs('2019-01-25').format('DD/MM/YYYY')
@@ -141,7 +140,7 @@ const Borrow = () => {
   const [borrowList, setBorrowList] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const [error, setError] = useState("");
-  const [name , setName] = useState("");
+  const [name, setName] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -256,36 +255,65 @@ const Borrow = () => {
                     </li>
                   </ol>
                 ))} */}
-                <table>
-  <thead>
-    <tr>
-      <th>Amount</th>
-      <th>Date</th>
-      <th>Termination Date</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {borrowList.amountArray.map((amount, subIndex) => (
-      <tr key={subIndex}>
-        <td>{amount} Rs.</td>
-        <td>{borrowList.dateArray[subIndex]}</td>
-        <td>
-          {get100thDayExcludingSundays(
-            borrowList.dateArray[subIndex]
-          ).toLocaleDateString()}
-        </td>
-        <td>
-          <button className="viewB" onClick={() => handleLendClick(borrowList, subIndex)}>
-            View Transactions
-          </button>
-        </td>
-      </tr>
-    ))}
-  </tbody>
-</table>
-
-                {" "}
+                <table
+                  style={{
+                    borderCollapse: "collapse",
+                    width: "100%",
+                    border: "1px solid #ccc",
+                  }}
+                >
+                  <thead>
+                    <tr>
+                      <th style={{ padding: "10px", border: "1px solid #ccc" }}>
+                        Amount
+                      </th>
+                      <th style={{ padding: "10px", border: "1px solid #ccc" }}>
+                        Date
+                      </th>
+                      <th style={{ padding: "10px", border: "1px solid #ccc" }}>
+                        Termination Date
+                      </th>
+                      <th style={{ padding: "10px", border: "1px solid #ccc" }}>
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {borrowList.amountArray.map((amount, subIndex) => (
+                      <tr key={subIndex}>
+                        <td
+                          style={{ padding: "10px", border: "1px solid #ccc" }}
+                        >
+                          {amount} Rs.
+                        </td>
+                        <td
+                          style={{ padding: "10px", border: "1px solid #ccc" }}
+                        >
+                          {borrowList.dateArray[subIndex]}
+                        </td>
+                        <td
+                          style={{ padding: "10px", border: "1px solid #ccc" }}
+                        >
+                          {get100thDayExcludingSundays(
+                            borrowList.dateArray[subIndex]
+                          ).toLocaleDateString()}
+                        </td>
+                        <td
+                          style={{ padding: "10px", border: "1px solid #ccc" }}
+                        >
+                          <button
+                            className="viewB"
+                            onClick={() =>
+                              handleLendClick(borrowList, subIndex)
+                            }
+                          >
+                            View Transactions
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>{" "}
               </>
             )}
             {/*  */}
@@ -300,20 +328,6 @@ const Borrow = () => {
 };
 
 export default Borrow;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // <table>
 //   <thead>
