@@ -220,9 +220,9 @@ const Borrow = () => {
         <div className="Bheading">
           <h1 className="">Borrow Money ({name})</h1>
           {error && <p style={{ color: "red" }}>{error}</p>}
-          <h4 className="text-[22px] font-bold">
+          <h3 className="text-[22px] font-bold">
             Total amount: {totalAmount} Rs.
-          </h4>
+          </h3>
         </div>
         <div className="Bamounts">
           <h2>Borrow List</h2>
@@ -236,9 +236,9 @@ const Borrow = () => {
                   <ol>
                     <li value={subIndex + 1}>
                       <div key={subIndex}>
-                        Amount: {amount} Rs. Date:{" "}
+                        Amount: {amount} Rs || Date:{" "}
                         {borrowList.dateArray[subIndex]}
-                        Termination Date:{" "}
+                        {" "}|| Termination Date:{" "}
                         {get100thDayExcludingSundays(
                           borrowList.dateArray[subIndex]
                         ).toLocaleDateString()}
