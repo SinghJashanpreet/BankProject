@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../css/Borrow.css";
 import axios from "axios";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 const Borrow = () => {
@@ -39,14 +39,19 @@ const Borrow = () => {
     const oneDayInMilliseconds = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
     let count = 0;
 
-    while (count < 99) {
+    while (count < 100) {
       startDate.setTime(startDate.getTime() + oneDayInMilliseconds);
 
       if (startDate.getDay() !== 0) {
         count++;
       }
     }
-
+    if (startDate.getDay() == 0)
+      startDate.setTime(startDate.getTime() - oneDayInMilliseconds);
+    else if (startDate.getDay() == 1) {
+      startDate.setTime(startDate.getTime() - oneDayInMilliseconds);
+      startDate.setTime(startDate.getTime() - oneDayInMilliseconds);
+    }
     return startDate;
   }
 
@@ -86,12 +91,11 @@ const Borrow = () => {
     // Redirect to the Lend component with the selected borrow item's details
     navigate(`/lend/${mobileNumber}/${idx}`);
   };
-  
   function convertDateFormat(inputDate) {
-    var parts = inputDate.split('/');
-    var formattedDate = parts[2] + '/' + parts[2] + '/' + parts[2];
+    var parts = inputDate.split("/");
+    var formattedDate = parts[1] + "/" + parts[0] + "/" + parts[2];
     return formattedDate;
-}
+  }
 
   return (
     <div className="Bbody">
@@ -164,16 +168,16 @@ const Borrow = () => {
                         <td
                           style={{ padding: "10px", border: "1px solid #ccc" }}
                         >
-                          {
-                            convertDateFormat(borrowList.dateArray[subIndex])
-                          }
+                          {convertDateFormat(borrowList.dateArray[subIndex])}
                         </td>
                         <td
                           style={{ padding: "10px", border: "1px solid #ccc" }}
                         >
-                          {get100thDayExcludingSundays(
-                            borrowList.dateArray[subIndex]
-                          ).toLocaleDateString()}
+                          {convertDateFormat(
+                            get100thDayExcludingSundays(
+                              borrowList.dateArray[subIndex]
+                            ).toLocaleDateString()
+                          )}
                         </td>
                         <td
                           style={{ padding: "10px", border: "1px solid #ccc" }}
