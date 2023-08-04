@@ -225,7 +225,7 @@ const Borrow = () => {
           <h1 className="">Borrow Money ({name})</h1>
           {error && <p style={{ color: "red" }}>{error}</p>}
           <h3 className="text-[22px] font-bold">
-            Total amount: {totalAmount} Rs.
+            Total Outstanding: {totalAmount} Rs.
           </h3>
         </div>
         <div className="Bamounts">
@@ -268,7 +268,7 @@ const Borrow = () => {
                         Amount
                       </th>
                       <th style={{ padding: "10px", border: "1px solid #ccc" }}>
-                        Date
+                        Start Date
                       </th>
                       <th style={{ padding: "10px", border: "1px solid #ccc" }}>
                         Termination Date
