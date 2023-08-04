@@ -52,18 +52,55 @@ const Lend = () => {
       <div className="Lcontainer example">
         <div className="Lheading">
           <h1 className="text-[34px] font-bold">
-            Transactions for Borrow Item ID: {mobileNumber} Loan No. :{" "}
-            {parseInt(idx) + 1}
+            Transactions for Borrow Item ID: {mobileNumber}
+            <br></br>
+            Loan No. : {parseInt(idx) + 1}
           </h1>
         </div>
         <div className="Lamounts example">
           <ul>
-            {transactions.map((transaction, index) => (
-              <li key={index} >
-                Amount: {transaction.amount} Rs. (Date: {transaction.date}) from
+            {/* {transactions.map((transaction, index) => (
+              <li key={index} style="list-style-type:disc">
+                Amount: {transaction.amount} Rs. (Date: {transaction.date}) 
                 Loan Number: {parseInt(transaction.num)}
               </li>
-            ))} 
+            ))} */}
+            <table
+              style={{
+                borderCollapse: "collapse",
+                width: "100%",
+                border: "1px solid #ccc",
+              }}
+            >
+              <thead>
+                <tr>
+                  <th style={{ padding: "10px", border: "1px solid #ccc" }}>
+                    Amount
+                  </th>
+                  <th style={{ padding: "10px", border: "1px solid #ccc" }}>
+                    Date
+                  </th>
+                  <th style={{ padding: "10px", border: "1px solid #ccc" }}>
+                    Loan Number
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {transactions.map((transaction, index) => (
+                  <tr key={index}>
+                    <td style={{ padding: "10px", border: "1px solid #ccc" }}>
+                      {transaction.amount} Rs.
+                    </td>
+                    <td style={{ padding: "10px", border: "1px solid #ccc" }}>
+                      {transaction.date}
+                    </td>
+                    <td style={{ padding: "10px", border: "1px solid #ccc" }}>
+                      {parseInt(transaction.num)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </ul>
         </div>
         <div className="Linput-field button">
