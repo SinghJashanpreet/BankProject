@@ -1,0 +1,78 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.Bbody{
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #4070f4;
+}
+
+.Bcontainer{
+    position: absolute;
+    padding: 30px;
+    max-width: 80%;
+    height: 80%;
+    width: 100%;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0 ,0 ,0, 0.1);
+    overflow: scroll; 
+}
+.Bcontainer .Bheading{
+    position: relative;
+}
+.Bcontainer .Bamounts{
+    margin-top: 30px;
+    position: relative; 
+}
+ .Bamounts .ul .li{
+    font-size: 40px;
+}
+.Bcontainer .Bbutton{
+    position: fixed;
+    bottom: 15%;
+    right: 13%;
+    margin-top: 35px;
+}
+.Bcontainer .Bbutton input{
+    padding: 10px;
+    border: none;
+    color: #fff;
+    letter-spacing: 0.5px;
+    border-radius: 6px;
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
+    background-color: #4070f4;
+    transition: all 0.3s ease;
+}
+
+.Bbutton input:hover{
+    background-color: #265df2;
+}
+
+.ull{
+    margin-left: 4%;
+}
+
+.viewB{
+    padding: 5px;
+    border: none;
+    color: #fff;
+    letter-spacing: 0.3px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    background-color: #4070f4;
+    transition: all 0.3s ease;
+}
+
+.viewB:hover{
+    background-color: #265df2;
+}
