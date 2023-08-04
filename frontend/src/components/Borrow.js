@@ -86,9 +86,10 @@ const Borrow = () => {
     // Redirect to the Lend component with the selected borrow item's details
     navigate(`/lend/${mobileNumber}/${idx}`);
   };
+  
   function convertDateFormat(inputDate) {
     var parts = inputDate.split('/');
-    var formattedDate = parts[1] + '/' + parts[0] + '/' + parts[2];
+    var formattedDate = parts[2] + '/' + parts[2] + '/' + parts[2];
     return formattedDate;
 }
 
