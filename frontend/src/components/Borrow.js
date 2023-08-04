@@ -176,7 +176,7 @@ const Borrow = () => {
   }
 
   const handleBorrow = () => {
-    const borrowAmount = 9000;
+    const borrowAmount = 10000;
     // Call the backend API to store the borrow details
     axios
       .post(`https://bank-backend7.onrender.com/api/borrow/${mobileNumber}`, {
