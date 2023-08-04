@@ -126,6 +126,11 @@
 
 // export default Borrow;
 
+
+// const dayjs = require('dayjs')
+// //import dayjs from 'dayjs' // ES 2015
+// dayjs('2019-01-25').format('DD/MM/YYYY')
+
 import React, { useEffect, useState } from "react";
 import "../css/Borrow.css";
 import axios from "axios";
@@ -232,7 +237,7 @@ const Borrow = () => {
               <h1></h1>
             ) : (
               <>
-                {borrowList.amountArray.map((amount, subIndex) => (
+                {/* {borrowList.amountArray.map((amount, subIndex) => (
                   <ol>
                     <li value={subIndex + 1}>
                       <div key={subIndex}>
@@ -250,7 +255,37 @@ const Borrow = () => {
                       </div>
                     </li>
                   </ol>
-                ))}{" "}
+                ))} */}
+                <table>
+  <thead>
+    <tr>
+      <th>Amount</th>
+      <th>Date</th>
+      <th>Termination Date</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {borrowList.amountArray.map((amount, subIndex) => (
+      <tr key={subIndex}>
+        <td>{amount} Rs.</td>
+        <td>{borrowList.dateArray[subIndex]}</td>
+        <td>
+          {get100thDayExcludingSundays(
+            borrowList.dateArray[subIndex]
+          ).toLocaleDateString()}
+        </td>
+        <td>
+          <button className="viewB" onClick={() => handleLendClick(borrowList, subIndex)}>
+            View Transactions
+          </button>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+                {" "}
               </>
             )}
             {/*  */}
@@ -265,6 +300,7 @@ const Borrow = () => {
 };
 
 export default Borrow;
+
 
 
 
