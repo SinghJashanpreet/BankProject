@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../css/Borrow.css";
 import axios from "axios";
-import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 const Borrow = () => {
@@ -91,6 +90,7 @@ const Borrow = () => {
     // Redirect to the Lend component with the selected borrow item's details
     navigate(`/lend/${mobileNumber}/${idx}`);
   };
+  
   function convertDateFormat(inputDate) {
     var parts = inputDate.split("/");
     var formattedDate = parts[1] + "/" + parts[0] + "/" + parts[2];
@@ -144,6 +144,9 @@ const Borrow = () => {
                   <thead>
                     <tr>
                       <th style={{ padding: "10px", border: "1px solid #ccc" }}>
+                        Loan No.
+                      </th>
+                      <th style={{ padding: "10px", border: "1px solid #ccc" }}>
                         Amount
                       </th>
                       <th style={{ padding: "10px", border: "1px solid #ccc" }}>
@@ -160,6 +163,11 @@ const Borrow = () => {
                   <tbody>
                     {borrowList.amountArray.map((amount, subIndex) => (
                       <tr key={subIndex}>
+                        <td
+                          style={{ padding: "10px", border: "1px solid #ccc" }}
+                        >
+                          {subIndex+1}
+                        </td>
                         <td
                           style={{ padding: "10px", border: "1px solid #ccc" }}
                         >
