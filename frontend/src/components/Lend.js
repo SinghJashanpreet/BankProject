@@ -47,6 +47,12 @@ const Lend = () => {
       });
   };
 
+  function convertDateFormat(inputDate) {
+    var parts = inputDate.split("/");
+    var formattedDate = parts[1] + "/" + parts[0] + "/" + parts[2];
+    return formattedDate;
+  }
+
   return (
     <div className="Lbody">
       <div className="Lcontainer example">
@@ -92,7 +98,7 @@ const Lend = () => {
                       {transaction.amount} Rs.
                     </td>
                     <td style={{ padding: "10px", border: "1px solid #ccc" }}>
-                      {transaction.date}
+                      {convertDateFormat(transaction.date)}
                     </td>
                     <td style={{ padding: "10px", border: "1px solid #ccc" }}>
                       {parseInt(transaction.num)}
