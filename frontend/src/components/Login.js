@@ -68,7 +68,7 @@ const Login = () => {
                 type="text"
                 placeholder="Enter Name "
                 required
-                value={mobileNumber}
+                value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
