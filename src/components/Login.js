@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [mobileNumber, setMobileNumber] = useState("");
+  const [name, setName] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -15,6 +16,7 @@ const Login = () => {
       // Call the backend API for login with the correct URL
       const response = await axios.post("https://bank-backend7.onrender.com/api/login", {
         mobileNumber,
+        name
       });
       
       if (response.status === 200) {
@@ -51,6 +53,23 @@ const Login = () => {
                 required
                 value={mobileNumber}
                 onChange={(e) => setMobileNumber(e.target.value)}
+              />
+            </div>
+            <div className="input-field button">
+              <input type="button" value="Search" onClick={handleLogin} />
+            </div>
+          </form>
+        </div>
+        <div className="form login">
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          <form action="#">
+            <div className="input-field">
+              <input
+                type="text"
+                placeholder="Enter Name "
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
             </div>
             <div className="input-field button">

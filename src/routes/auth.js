@@ -32,16 +32,28 @@ router.post('/register', async (req, res) => {
 
 // Login user
 router.post('/login', async (req, res) => {
-  const { mobileNumber } = req.body;
+  const { mobileNumber, name } = req.body;
+  
 
   try {
-    const user = await User.findOne({ mobileNumber });
-
-    if (!user) {
-      return res.status(400).json({ message: 'Invalid username or password' });
+    if(mobileNumber){
+      const user = await User.findOne({ mobileNumber });
+  
+      if (!user) {
+        return res.status(400).json({ message: 'Invalid MobileNumber' });
+      }
+  
+      res.status(200).json({ message: 'Login successful' });
     }
-
-    res.status(200).json({ message: 'Login successful' });
+    else if(name){
+      const user2 = await User.findOne({ name });
+  
+      if (!user2) {
+        return res.status(400).json({ message: 'Invalid name' });
+      }
+  
+      res.status(200).json({ message: 'Login successful' });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: 'Error logging in1' });
