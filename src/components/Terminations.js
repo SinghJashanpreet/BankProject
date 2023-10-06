@@ -79,7 +79,7 @@ function Terminations() {
                     </th>
                   </tr>
                 </thead>
-        {/* const processedData = response.data.map((obj, index) => {
+                {/* const processedData = response.data.map((obj, index) => {
           if (obj.dateArray.length != 0) {
             console.log(obj.name, obj.mobileNumber);
             obj.dateArray.map((d, idx) => {
@@ -89,37 +89,56 @@ function Terminations() {
           }
           return obj;
         });   */}
-      
-      <tbody>
-  {List.map((obj, index) => {
-    return obj.dateArray
-      .filter(d => {
-        const temp = get100thDayExcludingSundays(d).toLocaleDateString();
-        return dates === temp;
-      })
-      .map((d, idx) => (
-        <tr key={index}>
-          <td style={{ padding: "10px", border: "1px solid #ccc" }}>
-            {obj.name}
-          </td>
 
-          <td style={{ padding: "10px", border: "1px solid #ccc" }}>
-            {idx + 1}
-          </td>
+                <tbody>
+                  {List.map((obj, index) => {
+                    return obj.dateArray
+                      .filter((d) => {
+                        const temp =
+                          get100thDayExcludingSundays(d).toLocaleDateString();
+                        return dates === temp;
+                      })
+                      .map((d, idx) => (
+                        <tr key={index}>
+                          <td
+                            style={{
+                              padding: "10px",
+                              border: "1px solid #ccc",
+                            }}
+                          >
+                            {obj.name}
+                          </td>
 
-          <td style={{ padding: "10px", border: "1px solid #ccc" }}>
-            {obj.mobileNumber}
-          </td>
+                          <td
+                            style={{
+                              padding: "10px",
+                              border: "1px solid #ccc",
+                            }}
+                          >
+                            {idx + 1}
+                          </td>
 
-          <td style={{ padding: "10px", border: "1px solid #ccc" }}>
-            {obj.dateArray.join(", ")}
-          </td>
-        </tr>
-      ));
-  })}
-</tbody>
+                          <td
+                            style={{
+                              padding: "10px",
+                              border: "1px solid #ccc",
+                            }}
+                          >
+                            {obj.mobileNumber}
+                          </td>
 
-
+                          <td
+                            style={{
+                              padding: "10px",
+                              border: "1px solid #ccc",
+                            }}
+                          >
+                            {obj.dateArray.join(", ")}
+                          </td>
+                        </tr>
+                      ));
+                  })}
+                </tbody>
               </table>
             </ul>
           </div>
