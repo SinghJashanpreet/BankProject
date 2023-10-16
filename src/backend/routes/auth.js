@@ -1,17 +1,17 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const bcrypt = require('bcrypt');
-const User = require('../server/server');
-
+const bcrypt = require("bcrypt");
+const User = require("../server/server");
 // Register a new user
-router.post('/register', async (req, res) => {
+console.log(router);
+router.post("/register", async (req, res) => {
   const { mobileNumber, name } = req.body;
 
   try {
     const existingUser = await User.findOne({ mobileNumber });
 
     if (existingUser) {
-      return res.status(400).json({ message: 'Username already exists' });
+      return res.status(400).json({ message: "Username already exists" });
     }
 
     // const salt = await bcrypt.genSalt(10);
@@ -19,52 +19,47 @@ router.post('/register', async (req, res) => {
 
     const newUser = new User({
       name,
-      mobileNumber
+      mobileNumber,
     });
 
     await newUser.save();
-    res.status(200).json({ message: 'User registered successfully' });
+    res.status(200).json({ message: "User registered successfully" });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: 'Error registering user' });
+    res.status(500).json({ message: "Error registering user" });
   }
 });
 
 // Login user
-router.post('/login', async (req, res) => {
-  const { mobileNumber, name } = req.body;
-  
+router.post("/login", async (req, res) => {
+  const { mobileNumber, name, selectedDate } = req.body;
 
   try {
-    if(mobileNumber){
+    if (mobileNumber) {
       const user = await User.findOne({ mobileNumber });
-  
       if (!user) {
-        return res.status(400).json({ message: 'Invalid MobileNumber' });
+        return res.status(400).json({ message: "Invalid MobileNumber" });
       }
-  
-      res.status(200).json({ message: 'Login successful' });
-    }
-    else if(name){
+      res.status(200).json({ message: "Login successful" });
+    } 
+    
+    else if (name) {
       const user2 = await User.findOne({ name });
-  
       if (!user2) {
-        return res.status(400).json({ message: 'Invalid name' });
+        return res.status(400).json({ message: "Invalid name" });
       }
-  
-      res.status(200).json({ message: 'Login successful' });
+      res.status(200).json({ message: "Login successful" });
     }
+    
+    else if(selectedDate){
+
+    }
+
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: 'Error logging in1' });
+    res.status(500).json({ message: "Error logging in1" });
   }
 });
-
-
-
-
-
-
 
 // router.post('/login', async (req, res) => {
 //   const { mobileNumber } = req.body;
@@ -72,21 +67,21 @@ router.post('/login', async (req, res) => {
 //   try {
 //     if(mobileNumber){
 //       const user = await User.findOne({ mobileNumber });
-  
+
 //       if (!user) {
 //         return res.status(400).json({ message: 'Invalid username or password' });
 //       }
-  
+
 //       res.status(200).json({ message: 'Login successful' });
 //     }
 
 //     else if(Tdate){
 //       const user = await User.findOne({ mobileNumber });
-  
+
 //       if (!user) {
 //         return res.status(400).json({ message: 'Invalid username or password' });
 //       }
-  
+
 //       res.status(200).json({ message: 'Login successful' });
 //     }
 //   } catch (error) {

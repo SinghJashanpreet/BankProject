@@ -90,7 +90,7 @@ function Terminations() {
           return obj;
         });   */}
 
-                <tbody>
+                {/* <tbody>
                   {List.map((obj, index) => {
                     return obj.dateArray
                       .filter((d) => {
@@ -133,12 +133,12 @@ function Terminations() {
                               border: "1px solid #ccc",
                             }}
                           >
-                            {obj.dateArray.join(", ")}
+                            
                           </td>
                         </tr>
                       ));
                   })}
-                </tbody>
+                </tbody> */}
               </table>
             </ul>
           </div>

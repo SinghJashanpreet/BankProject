@@ -24,13 +24,13 @@ const Register = () => {
 
     // Send a POST request to register the new user
     axios
-      .post("https://bank-backend7.onrender.com/api/register", {
+      .post("http://localhost:5000/api/register", {
         name,
         mobileNumber,
       })
       .then((response) => {
         console.log("User registered successfully:", response.data);
-        navigate('/');
+        navigate('/login');
         // Handle successful registration
       })
       .catch((error) => {

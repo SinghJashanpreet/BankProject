@@ -2,45 +2,61 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
+const { v4: uuidv4 } = require("uuid");
 
 app.use(
   cors({
-    origin: "https://loanapp1.netlify.app",
+    // origin: "https://loanapp1.netlify.app",
+    origin: "http://localhost:3000",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
 
 const port = process.env.PORT || 5000;
 
+const username = encodeURIComponent("officialkhalsajs");
+const password = encodeURIComponent("J@sh@njo0");
+const dbName = "Borrows"; // Replace 'your-database-name' with your actual database name
 
-const username = encodeURIComponent('officialkhalsajs');
-const password = encodeURIComponent('J@sh@njo0');
-const dbName = 'Borrows'; // Replace 'your-database-name' with your actual database name
+// const uri = `mongodb+srv://${username}:${password}@cluster0.cutxstq.mongodb.net/${dbName}?retryWrites=true&w=majority`;
+const uri = `mongodb://127.0.0.1:27017/borrowDB`;
 
-const uri = `mongodb+srv://${username}:${password}@cluster0.cutxstq.mongodb.net/${dbName}?retryWrites=true&w=majority`;
-
-mongoose.connect(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose
+  .connect(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
-    console.log('Connected to MongoDB');
+    console.log("Connected to MongoDB");
     // Your further code logic here
   })
-  .catch(err => {
-    console.error('Error connecting to MongoDB:', err.message);
+  .catch((err) => {
+    console.error("Error connecting to MongoDB:", err.message);
   });
-
 
 const borrowSchema = new mongoose.Schema({
   userId: String,
-  amountArray: [Number],
-  dateArray: [String],
+  amountArray: [
+    {
+      id: String,
+      TotalBorrow: Number,
+      Remaining: Number,
+      DateBorrow: String,
+      Transactions: [
+        {
+          amount: Number,
+          date: String,
+        },
+      ],
+      Automate: Boolean,
+    },
+  ],
+  // dateArray: [String],
   transactions: [
     {
       amount: Number,
       date: String,
-      num : String
+      num: String,
     },
   ],
   mobileNumber: String,
@@ -57,34 +73,6 @@ app.use(express.json());
 const authRoutes = require("../routes/auth");
 app.use("/api", authRoutes);
 
-app.post("/api/borrow/:mobileNumber", async (req, res) => {
-  const { mobileNumber } = req.params;
-  const { amount } = req.body;
-  const currentDate = new Date();
-  const dateString = currentDate.toLocaleDateString();
-
-  try {
-    let borrowItem = await Borrow.findOne({ mobileNumber });
-    if (!borrowItem) {
-      borrowItem = new Borrow({
-        mobileNumber,
-        amountArray: [],
-        dateArray: [],
-        transactions: [],
-      });
-    }
-
-    borrowItem.amountArray.push(amount);
-    borrowItem.dateArray.push(dateString);
-    await borrowItem.save();
-
-    res.status(200).json(borrowItem);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Error saving borrow details to database" });
-  }
-});
-
 app.get("/api/borrow/", async (req, res) => {
   try {
     const allBorrowItems = await Borrow.find({});
@@ -99,12 +87,16 @@ app.get("/api/borrow/", async (req, res) => {
 
 app.get("/api/borrow/:mobileNumber", async (req, res) => {
   const { mobileNumber } = req.params;
-
+  const name = !isNaN(mobileNumber) ? undefined : mobileNumber;
   try {
-    const borrowItem = await Borrow.findOne({ mobileNumber });
-    if (!borrowItem) {
-      return res.status(404).json({ error: "User not found" });
-    }
+    if (name !== undefined) var borrowItem = await Borrow.findOne({ name });
+    else var borrowItem = await Borrow.findOne({ mobileNumber });
+
+    
+      if (!borrowItem) {
+        return res.status(404).json({ error: "User not found" });
+      }
+   
 
     res.status(200).json(borrowItem);
   } catch (error) {
@@ -115,26 +107,99 @@ app.get("/api/borrow/:mobileNumber", async (req, res) => {
   }
 });
 
+app.post("/api/borrow/:mobileNumber", async (req, res) => {
+  const { mobileNumber } = req.params;
+  const { amount } = req.body;
+  const currentDate = new Date();
+  const dateString = currentDate.toLocaleDateString();
+  const name = !isNaN(mobileNumber) ? undefined : mobileNumber;
+  try {
+    if (name !== undefined) var borrowItem = await Borrow.findOne({ name });
+    else var borrowItem = await Borrow.findOne({ mobileNumber });
+
+    if (!borrowItem) {
+      borrowItem = new Borrow({
+        mobileNumber,
+        amountArray: [],
+        // dateArray: [],
+        //transactions: [],
+      });
+    }
+    const obj = {
+      id: uuidv4(),
+      TotalBorrow: amount,
+      Remaining: amount,
+      DateBorrow: dateString,
+    };
+    borrowItem.amountArray.push(obj);
+    //borrowItem.dateArray.push(dateString);
+    await borrowItem.save();
+
+    res.status(200).json(borrowItem);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Error saving borrow details to database" });
+  }
+});
+
 app.post("/api/borrow/:mobileNumber/:idx", async (req, res) => {
   const { mobileNumber, idx } = req.params;
-  const deductionAmount = 100; // Assuming you want to deduct 100 Rs.
+  const { deductAm } = req.body;
+  const name = !isNaN(mobileNumber) ? undefined : mobileNumber;
+  const deductionAmount = deductAm; // Assuming you want to deduct 100 Rs.
 
   try {
     // Find the borrow item by its _id and update the arrays
-    const updatedItem = await Borrow.findOneAndUpdate(
-      { mobileNumber: mobileNumber},
-      {
-        $inc: { [`amountArray.${idx}`]: -deductionAmount }, // Deduct the amount from the specific element in the amountArray
-        $push: {
-          transactions: {
-            amount: -deductionAmount,
-            date: new Date().toLocaleDateString(),
-            num: parseInt(idx)+1,
-          },
+    if (name !== undefined) {
+      var Data = await Borrow.findOne({ name });
+      const data = Data.amountArray.filter((arr) => {
+        return arr.id === idx;
+      });
+      
+      const obj = {
+        amount: -deductionAmount,
+        date: new Date().toLocaleDateString(),
+      };
+      
+      // Update the specific element within amountArray that matches the id
+      const updatedAmountArray = Data.amountArray.map((item) => {
+        if (item.id === idx) {
+          item.Remaining = item.Remaining - deductionAmount;
+          item.Transactions.push(obj);
         }
-      },
-      { new: true}
-    );
+        return item;
+      });
+      
+      Data.amountArray = updatedAmountArray;
+      
+      console.log(data);
+      
+      var updatedItem = await Borrow.findOneAndUpdate(
+        {
+          name: name,
+        },
+        {
+          $set: { amountArray: Data.amountArray },
+        },
+        { new: true }
+      );
+      
+    } else {
+      var Data = await Borrow.findOne({ mobileNumber });
+      var updatedItem = await Borrow.findOneAndUpdate(
+        { mobileNumber: mobileNumber, "amountArray.id": idx },
+        {
+          $inc: { "amountArray.$.Remaining": -deductionAmount }, // Deduct the amount from the specific element in the amountArray
+          $push: {
+            "amountArray.$.Transactions": {
+              amount: -deductionAmount,
+              date: new Date().toLocaleDateString(),
+            },
+          },
+        },
+        { new: true }
+      );
+    }
 
     if (!updatedItem) {
       // Borrow item with the given itemId not found
@@ -150,42 +215,38 @@ app.post("/api/borrow/:mobileNumber/:idx", async (req, res) => {
   }
 });
 
-app.post("/api/login", async (req, res) => {
-  const { mobileNumber } = req.body;
-  try {
-    // Check if the mobile number exists in the database
-    const existingUser = await Borrow.findOne({ mobileNumber });
-    if (existingUser) {
-      // Mobile number exists in the database, send a success response
-      res.json({ message: "Login successful", user: existingUser });
-    } else {
-      // Mobile number not found in the database, send an error response
-      res
-      .status(404)
-      .json({ error: "Mobile number not found, please register." });
-    }
-  } catch (error) {
-    // Handle any errors that may occur during database interaction
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
+app.post("/api/namechange/:mobileNumber/:Nname", async (req, res) => {
+  const { mobileNumber, Nname } = req.params;
 
-app.post("/api/register", async (req, res) => {
-  const { mobileNumber, name } = req.body;
+  const name = !isNaN(mobileNumber) ? undefined : mobileNumber;
+
   try {
-    // Check if the mobile number already exists in the database
-    const existingUser = await Borrow.findOne({ mobileNumber });
-    if (existingUser) {
-      // Mobile number already exists, send an error response
-      res.status(409).json({ error: "Mobile number already registered." });
+    // Find the borrow item by its _id and update the arrays
+    if (name !== undefined) {
+      var updatedItem = await Borrow.findOneAndUpdate(
+        { name: name },
+        { $set: { name: Nname } },
+        { new: true }
+      );
     } else {
-      // Mobile number does not exist, create a new entry in the database
-      const newUser = await Borrow.create({ mobileNumber, name });
-      res.json({ message: "Registration successful", user: newUser });
+      var updatedItem = await Borrow.findOneAndUpdate(
+        { mobileNumber: mobileNumber },
+        { $set: { name: Nname } },
+        { new: true }
+      );
     }
+
+    if (!updatedItem) {
+      // Borrow item with the given itemId not found
+      return res
+        .status(404)
+        .json({ error: "Data item not found to Change name" });
+    }
+
+    res.status(200).json(updatedItem);
   } catch (error) {
-    // Handle any errors that may occur during database interaction
-    res.status(500).json({ error: "Internal server error" });
+    console.log(error);
+    res.status(500).json({ error: "Error Changing Name" });
   }
 });
 

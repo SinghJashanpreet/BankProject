@@ -1,26 +1,47 @@
 import React, { useEffect, useState } from "react";
+
 import "../css/Borrow.css";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 const Borrow = () => {
   const { mobileNumber } = useParams();
   const [borrowList, setBorrowList] = useState([]);
+  const [PastList, setPastList] = useState([]);
+  // const [List, setBorrowList] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const [error, setError] = useState("");
-  const [name, setName] = useState("");
+  const [names, setName] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch the borrow details from the backend API
     axios
-      .get(`https://bank-backend7.onrender.com/api/borrow/${mobileNumber}`)
+      // .get(`https://bank-backend7.onrender.com/api/borrow/${mobileNumber}`)
+      .get(`http://localhost:5000/api/borrow/${mobileNumber}`)
       .then((response) => {
-        setBorrowList(response.data);
+        const filteredAmountArray = response.data.amountArray.filter((arr) => {
+          return arr.Remaining > 0;
+        });
+        const filteredPastAmountArray = response.data.amountArray.filter(
+          (arr) => {
+            return arr.Remaining <= 0;
+          }
+        );
+        // Update borrowList using the filtered amountArray
+        setBorrowList({
+          ...response.data,
+          amountArray: filteredAmountArray,
+        });
         setName(response.data.name);
+
+        setPastList({
+          ...response.data,
+          amountArray: filteredPastAmountArray,
+        });
         // Calculate the total amount dynamically based on the borrow list
         const total = response.data.amountArray.reduce(
-          (total, amount) => total + amount,
+          (total, amount) => total + amount.Remaining,
           0
         );
 
@@ -31,8 +52,13 @@ const Borrow = () => {
         console.log(error);
         setError("Error fetching borrow details. Please try again later.");
       });
-  }, []);
+  }, [names]);
 
+  function convertDateFormat(inputDate) {
+    var parts = inputDate.split("/");
+    var formattedDate = parts[1] + "/" + parts[0] + "/" + parts[2];
+    return formattedDate;
+  }
   function get100thDayExcludingSundays(startDateStr) {
     const startDate = new Date(startDateStr);
     const oneDayInMilliseconds = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
@@ -51,89 +77,104 @@ const Borrow = () => {
       startDate.setTime(startDate.getTime() - oneDayInMilliseconds);
       startDate.setTime(startDate.getTime() - oneDayInMilliseconds);
     }
-    return startDate;
+    var parts = startDate.toLocaleDateString().split("/");
+    var formattedDate = parts[1] + "/" + parts[0] + "/" + parts[2];
+    return formattedDate;
   }
 
   const handleBorrow = () => {
-    const borrowAmount = 9900;
-    // Call the backend API to store the borrow details
-    axios
-      .post(`https://bank-backend7.onrender.com/api/borrow/${mobileNumber}`, {
-        amount: borrowAmount,
-      })
-      .then(() => {
-        // Fetch the updated borrow details from the backend API
-        axios
-          .get(`https://bank-backend7.onrender.com/api/borrow/${mobileNumber}`)
-          .then((response) => {
-            setBorrowList(response.data);
-            // Calculate the total amount dynamically based on the updated borrow list
-            const total = response.data.amountArray.reduce(
-              (total, amount) => total + amount,
-              0
-            );
-            setTotalAmount(total);
-            setError("");
-          })
-          .catch((error) => {
-            console.log(error);
-            setError("Error fetching borrow details. Please try again later.");
-          });
-      })
-      .catch((error) => {
-        console.log(error);
-        setError("Error borrowing money. Please try again later.");
-      });
+    const borrowAmount = prompt("Enter the Amount to borrow: ");
+    if (borrowAmount !== null) {
+      // Call the backend API to store the borrow details
+      axios
+        // .post(`https://bank-backend7.onrender.com/api/borrow/${mobileNumber}`, {
+        .post(`http://localhost:5000/api/borrow/${mobileNumber}`, {
+          amount: borrowAmount,
+        })
+        .then(() => {
+          // Fetch the updated borrow details from the backend API
+          axios
+            // .get(`https://bank-backend7.onrender.com/api/borrow/${mobileNumber}`)
+            .get(`http://localhost:5000/api/borrow/${mobileNumber}`)
+            .then((response) => {
+              const filteredAmountArray = response.data.amountArray.filter(
+                (arr) => {
+                  return arr.Remaining > 0;
+                }
+              );
+              // Update borrowList using the filtered amountArray
+              setBorrowList({
+                ...response.data,
+                amountArray: filteredAmountArray,
+              });
+              // Calculate the total amount dynamically based on the updated borrow list
+              const total = response.data.amountArray.reduce(
+                (total, amount) => total + amount.Remaining,
+                0
+              );
+              setTotalAmount(total);
+             
+              setError("");
+            })
+            .catch((error) => {
+              console.log(error);
+              setError(
+                "Error fetching borrow details. Please try again later."
+              );
+            });
+        })
+        .catch((error) => {
+          console.log(error);
+          setError("Error borrowing money. Please try again later.");
+        });
+    }
   };
 
   const handleLendClick = (item, idx) => {
     // Redirect to the Lend component with the selected borrow item's details
     navigate(`/lend/${mobileNumber}/${idx}`);
   };
-  
-  function convertDateFormat(inputDate) {
-    var parts = inputDate.split("/");
-    var formattedDate = parts[1] + "/" + parts[0] + "/" + parts[2];
-    return formattedDate;
-  }
+
+  const HandleNameChange = async () => {
+    const Nname = prompt("Enter New Name: ");
+    axios
+      .post(`http://localhost:5000/api/namechange/${mobileNumber}/${Nname}`)
+      .then(() => {
+        console.log("Name changed to ", Nname);
+        // Update the names state with the new name
+        setName(Nname);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  const lendAmount = 25000;
 
   return (
     <div className="Bbody">
       <div className="Bcontainer example">
         <div className="Bheading">
-          <h1 className="">Borrow Money ({name})</h1>
+          <h1 className="">Borrow Money ({names})</h1>
           {error && <p style={{ color: "red" }}>{error}</p>}
           <h3 className="text-[22px] font-bold">
             Total Outstanding: {totalAmount} Rs.
+          </h3>
+          <h3 className="text-[22px] font-bold">
+            Lend Amount: {lendAmount} Rs.
+          </h3>
+          <h3 className="text-[22px] font-bold">
+            Profit Till: {totalAmount - lendAmount} Rs.
           </h3>
         </div>
         <div className="Bamounts">
           <h2>Borrow List</h2>
           <ul className="ull">
             {/* {console.log(borrowList)} */}
-            {borrowList.length == 0 ? (
-              <h1></h1>
+            {borrowList?.length === 0 ? (
+              <h1>Loading...</h1>
             ) : (
               <>
-                {/* {borrowList.amountArray.map((amount, subIndex) => (
-                  <ol>
-                    <li value={subIndex + 1}>
-                      <div key={subIndex}>
-                        Amount: {amount} Rs || Date:{" "}
-                        {borrowList.dateArray[subIndex]}
-                        {" "}|| Termination Date:{" "}
-                        {get100thDayExcludingSundays(
-                          borrowList.dateArray[subIndex]
-                        ).toLocaleDateString()}
-                        <button className="viewB"
-                          onClick={() => handleLendClick(borrowList, subIndex)}
-                        >
-                          View Transactions
-                        </button>
-                      </div>
-                    </li>
-                  </ol>
-                ))} */}
                 <table
                   style={{
                     borderCollapse: "collapse",
@@ -144,63 +185,102 @@ const Borrow = () => {
                   <thead>
                     <tr>
                       <th style={{ padding: "10px", border: "1px solid #ccc" }}>
-                        Loan No.
+                        Sr No.
                       </th>
                       <th style={{ padding: "10px", border: "1px solid #ccc" }}>
-                        Amount
+                        Date Borrow
                       </th>
                       <th style={{ padding: "10px", border: "1px solid #ccc" }}>
-                        Start Date
+                        Amount Borrow
                       </th>
                       <th style={{ padding: "10px", border: "1px solid #ccc" }}>
-                        Termination Date
+                        Amount Remaining
+                      </th>
+                      <th style={{ padding: "10px", border: "1px solid #ccc" }}>
+                        Date Maturity
+                      </th>
+                      <th style={{ padding: "10px", border: "1px solid #ccc" }}>
+                        Automate
                       </th>
                       <th style={{ padding: "10px", border: "1px solid #ccc" }}>
                         Actions
                       </th>
                     </tr>
                   </thead>
+                  {/* {console.log(borrowList)} */}
                   <tbody>
-                    {borrowList.amountArray.map((amount, subIndex) => (
-                      <tr key={subIndex}>
-                        <td
-                          style={{ padding: "10px", border: "1px solid #ccc" }}
-                        >
-                          {subIndex+1}
-                        </td>
-                        <td
-                          style={{ padding: "10px", border: "1px solid #ccc" }}
-                        >
-                          {amount} Rs.
-                        </td>
-                        <td
-                          style={{ padding: "10px", border: "1px solid #ccc" }}
-                        >
-                          {convertDateFormat(borrowList.dateArray[subIndex])}
-                        </td>
-                        <td
-                          style={{ padding: "10px", border: "1px solid #ccc" }}
-                        >
-                          {convertDateFormat(
-                            get100thDayExcludingSundays(
-                              borrowList.dateArray[subIndex]
-                            ).toLocaleDateString()
-                          )}
-                        </td>
-                        <td
-                          style={{ padding: "10px", border: "1px solid #ccc" }}
-                        >
-                          <button
-                            className="viewB"
-                            onClick={() =>
-                              handleLendClick(borrowList, subIndex)
-                            }
+                    {borrowList?.length === 0 ? (
+                      <h1>Loading...</h1>
+                    ) : (
+                      borrowList.amountArray.map((amount, subIndex) => (
+                        <tr key={subIndex}>
+                          <td
+                            style={{
+                              padding: "10px",
+                              border: "1px solid #ccc",
+                            }}
                           >
-                            View Transactions
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+                            {subIndex + 1}
+                          </td>
+                          <td
+                            style={{
+                              padding: "10px",
+                              border: "1px solid #ccc",
+                            }}
+                          >
+                            {/* {convertDateFormat(borrowList.dateArray[subIndex+1])} */}
+                            {convertDateFormat(amount.DateBorrow)}
+                          </td>
+                          <td
+                            style={{
+                              padding: "10px",
+                              border: "1px solid #ccc",
+                            }}
+                          >
+                            {amount.TotalBorrow} Rs.
+                          </td>
+                          <td
+                            style={{
+                              padding: "10px",
+                              border: "1px solid #ccc",
+                            }}
+                          >
+                            {amount.Remaining} Rs.
+                          </td>
+                          <td
+                            style={{
+                              padding: "10px",
+                              border: "1px solid #ccc",
+                            }}
+                          >
+                            {get100thDayExcludingSundays(amount.DateBorrow)}
+                          </td>
+                          <td
+                            style={{
+                              padding: "10px",
+                              border: "1px solid #ccc",
+                            }}
+                          >
+                            on/off
+                          </td>
+                          <td
+                            style={{
+                              padding: "10px",
+                              border: "1px solid #ccc",
+                            }}
+                          >
+                            <button
+                              className="viewB"
+                              onClick={() =>
+                                handleLendClick(borrowList, amount.id)
+                              }
+                            >
+                              View Transactions
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>{" "}
               </>
@@ -209,40 +289,23 @@ const Borrow = () => {
           </ul>
         </div>
         <div className="Bbutton">
-          <input type="button" value="Borrow Rs. 9000" onClick={handleBorrow} />
+          <input type="button" value="Borrow" onClick={handleBorrow} />
         </div>
+
+        <button
+          onClick={() =>
+            navigate(`/pastaccount/${mobileNumber}`, {
+              state: { pastList: PastList },
+            })
+          }
+        >
+          View Past Account
+        </button>
+
+        <button onClick={HandleNameChange}>Edit Name</button>
       </div>
     </div>
   );
 };
 
 export default Borrow;
-
-// <table>
-//   <thead>
-//     <tr>
-//       <th>Amount</th>
-//       <th>Date</th>
-//       <th>Termination Date</th>
-//       <th>Actions</th>
-//     </tr>
-//   </thead>
-//   <tbody>
-//     {borrowList.amountArray.map((amount, subIndex) => (
-//       <tr key={subIndex}>
-//         <td>{amount} Rs.</td>
-//         <td>{borrowList.dateArray[subIndex]}</td>
-//         <td>
-//           {get100thDayExcludingSundays(
-//             borrowList.dateArray[subIndex]
-//           ).toLocaleDateString()}
-//         </td>
-//         <td>
-//           <button className="viewB" onClick={() => handleLendClick(borrowList, subIndex)}>
-//             View Transactions
-//           </button>
-//         </td>
-//       </tr>
-//     ))}
-//   </tbody>
-// </table>
