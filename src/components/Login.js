@@ -15,7 +15,7 @@ const Login = () => {
   useEffect(()=>{
     const doit = async() =>{
       try{
-        const response = await fetch('http://localhost:5000/api/borrow');
+        const response = await fetch('https://bank-backend7.onrender.com/api/borrow');
         if (response.ok) {
           const data = await response.json();
           setNameData(data.map((a)=>a.name));
