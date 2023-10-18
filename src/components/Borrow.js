@@ -29,7 +29,12 @@ const Borrow = () => {
         const filteredPastAmountArray = response.data.amountArray.filter(
           (arr) => {
             //console.log()
-            return arr.Remaining <= 0 || (get100thDayExcludingSundays(new Date(arr.DateBorrow).toLocaleDateString()) < (new Date().toLocaleDateString()));
+            return (
+              arr.Remaining <= 0 ||
+              get100thDayExcludingSundays(
+                new Date(arr.DateBorrow).toLocaleDateString()
+              ) < new Date().toLocaleDateString()
+            );
           }
         );
         // Update borrowList using the filtered amountArray
@@ -72,7 +77,6 @@ const Borrow = () => {
     return formattedDate;
   }
   function get100thDayExcludingSundays(startDateStr) {
-    
     const startDate = new Date(startDateStr);
     const oneDayInMilliseconds = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
     let count = 0;
@@ -92,7 +96,7 @@ const Borrow = () => {
     }
     var parts = startDate.toLocaleDateString().split("/");
     var formattedDate = parts[1] + "/" + parts[0] + "/" + parts[2];
-    
+
     return formattedDate;
   }
 
@@ -117,6 +121,9 @@ const Borrow = () => {
 
   const handleBorrow = () => {
     const borrowAmount = prompt("Enter the Amount to borrow: ");
+
+    if (borrowAmount === null) return;
+
     const maturityAmount = (borrowAmount * 10) / 9;
     if (borrowAmount !== null) {
       // Call the backend API to store the borrow details
@@ -180,9 +187,14 @@ const Borrow = () => {
 
   const HandleNameChange = async () => {
     const Nname = prompt("Enter New Name: ");
+
+    if (Nname === null) return;
+
+
     axios           
       // .post(`http://localhost:5000/api/namechange/${mobileNumber}/${Nname}`)
       .post(`https://bank-backend7.onrender.com/api/namechange/${mobileNumber}/${Nname}`)
+
       .then(() => {
         console.log("Name changed to ", Nname);
         // Update the names state with the new name
@@ -194,26 +206,32 @@ const Borrow = () => {
       });
   };
 
- const lendAmount = 30000;
+  const lendAmount = 30000;
 
   return (
     <div className="Bbody">
       <div className="Bcontainer example">
         <div className="Bheading">
-          <h1 className="">Borrow Money ({names})</h1>
-          {error && <p style={{ color: "red" }}>{error}</p>}
-          <h3 className="text-[22px] font-bold">
-            Total Outstanding: {totalAmount} Rs.
-          </h3>
-          {/* <h3 className="text-[22px] font-bold">
+          <div className="flex flex-row justify-between">
+            <h1 className="text-[35px] font-semibold underline">
+              Borrow Money : ({names})
+            </h1>
+            {error && <p style={{ color: "red" }}>{error}</p>}
+            <div className="border-2 border-black rounded-xl p-2">
+              <h3 className="text-[22px] font-medium">
+                Total Outstanding: {totalAmount} Rs.
+              </h3>
+              {/* <h3 className="text-[22px] font-bold">
             Lend Amount: {lendAmount} Rs.
-          </h3> */}
-          <h3 className="text-[22px] font-bold">
-            Profit Till: {ProfitTill} Rs.
-          </h3>
+            </h3> */}
+              <h3 className="text-[22px] font-medium">
+                Profit Till: {ProfitTill} Rs.
+              </h3>
+            </div>
+          </div>
         </div>
         <div className="Bamounts">
-          <h2>Borrow List</h2>
+          {/* <h2>Borrow List</h2> */}
           <ul className="ull">
             {/* {console.log(borrowList)} */}
             {borrowList?.length === 0 ? (
@@ -306,9 +324,7 @@ const Borrow = () => {
                               border: "1px solid #ccc",
                             }}
                           >
-                            <button
-                              onClick={toggleDecrement}
-                            >
+                            <button onClick={toggleDecrement}>
                               {shouldDecrement ? "on" : "off"}
                             </button>
                           </td>
@@ -347,11 +363,17 @@ const Borrow = () => {
               state: { pastList: PastList },
             })
           }
+          className="bg-[#4070f4] text-white font-medium py-3 px-2 rounded-lg fixed left-[12%] bottom-[13%]"
         >
           View Past Account
         </button>
 
-        <button onClick={HandleNameChange}>Edit Name</button>
+        <button
+          onClick={HandleNameChange}
+          className="bg-[#4070f4] text-white font-medium py-3 px-2 rounded-lg fixed left-[12%] bottom-[22%]"
+        >
+          Edit Name
+        </button>
       </div>
     </div>
   );

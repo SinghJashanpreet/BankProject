@@ -39,6 +39,7 @@ const Lend = () => {
 
   const handleDeduct = () => {
     const deductAm = prompt("Enter Amount to Deduct: ");
+    if (deductAm === null) return;
     if (deductAm !== null) {
       // Call the backend API to deduct Rs. 100 for the specific borrow item
       axios
@@ -72,7 +73,6 @@ const Lend = () => {
   };
 
   function convertDateFormat(inputDate) {
-
     var parts = inputDate.split("/");
     var formattedDate = parts[1] + "/" + parts[0] + "/" + parts[2];
     return formattedDate;
@@ -82,8 +82,8 @@ const Lend = () => {
     <div className="Lbody">
       <div className="Lcontainer example">
         <div className="Lheading">
-          <h1 className="text-[34px] font-bold">
-            Transactions : {mobileNumber}
+          <h1 className="text-[35px] font-semibold underline">
+            Transactions : ({mobileNumber})
             <br></br>
           </h1>
         </div>
@@ -120,7 +120,7 @@ const Lend = () => {
                   transactions[0].Transactions.map((transaction, index) => (
                     <tr key={index}>
                       <td style={{ padding: "10px", border: "1px solid #ccc" }}>
-                        {index+1}
+                        {index + 1}
                       </td>
                       <td style={{ padding: "10px", border: "1px solid #ccc" }}>
                         {transaction.amount} Rs.
