@@ -115,8 +115,8 @@ function TerminationData() {
       <div className="Bbody">
         <div className="Bcontainer example">
           <div className="Bheading">
-            <h1 className="" style={{ fontSize: "50px" }}>
-              Termination Data({convertDateFormat(enteredDate)})
+            <h1 className="text-[35px] font-semibold underline ">
+              Termination Data : ({convertDateFormat(enteredDate)})
             </h1>
           </div>
           <div className="Bamounts">

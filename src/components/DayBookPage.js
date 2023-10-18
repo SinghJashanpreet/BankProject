@@ -11,11 +11,13 @@ function DayBookPage() {
     <div className="body">
       <div className="container">
         <div className="form login">
-          <label>Enter Date: </label>
-          <input
-            type="date"
-            onChange={(ev) => setEnteredDate(ev.target.value)}
-          />
+          <div className="flex flex-row justify-evenly">
+            <label className="text-lg font-semibold">Enter Date: </label>
+            <input
+              type="date"
+              onChange={(ev) => setEnteredDate(ev.target.value)}
+            />
+          </div>
           <div className="input-field button">
             <input type="button" value="Enter" onClick={clickHandler} />
           </div>

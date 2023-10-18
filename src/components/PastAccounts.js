@@ -1,6 +1,6 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
-
+import { useLocation, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 function convertDateFormat(inputDate) {
   var parts = inputDate.split("/");
   var formattedDate = parts[1] + "/" + parts[0] + "/" + parts[2];
@@ -30,7 +30,9 @@ function get100thDayExcludingSundays(startDateStr) {
 }
 
 function PastAccounts() {
+  const navigate = useNavigate();
   const location = useLocation();
+  const {mobileNumber} = useParams()
   // Access the pastList from the location state
   const borrowList = location.state?.pastList || [];
   //console.log(borrowList);
@@ -38,7 +40,7 @@ function PastAccounts() {
     <div className="Bbody">
       <div className="Bcontainer example">
         <div className="Bamounts">
-          <h2>Past Accounts List</h2>
+          <h2 className="text-[35px] font-semibold underline mb-9 mt-[-10px]">Past Accounts List</h2>
           <ul className="ull">
             {/* {console.log(borrowList)} */}
             {borrowList.length == 0 ? (
@@ -109,7 +111,7 @@ function PastAccounts() {
           </ul>
         </div>
         <div className="Bbutton">
-          <input type="button" value="Go Back" />
+          <input type="button" value="Go Back" onClick={()=>navigate(`/borrow/${mobileNumber}`)}/>
         </div>
       </div>
     </div>

@@ -119,8 +119,8 @@ function DayBookData() {
       <div className="Bbody">
         <div className="Bcontainer example">
           <div className="Bheading">
-            <h1 className="" style={{ fontSize: "50px" }}>
-              Day Book ({convertDateFormat2(enteredDate)})
+            <h1 className="font-medium underline" style={{ fontSize: "35px" }}>
+              Day Book-<span style={{ fontSize: "35px" }}>{convertDateFormat2(enteredDate)}</span>
             </h1>
             {/* {error && <p style={{ color: "red" }}>{error}</p>} */}
           </div>
