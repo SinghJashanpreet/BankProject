@@ -30,7 +30,8 @@ function TerminationData() {
 
   useEffect(() => {
     const fetchApiData = async () => {
-      const response1 = await fetch("http://localhost:5000/api/borrow/")
+      // const response1 = await fetch("http://localhost:5000/api/borrow/")
+      const response1 = await fetch("https://bank-backend7.onrender.com/api/borrow/")
         .then((response) => {
           if (response.ok) {
             return response.json();

@@ -20,7 +20,8 @@ const Borrow = () => {
     // Fetch the borrow details from the backend API
     axios
       // .get(`https://bank-backend7.onrender.com/api/borrow/${mobileNumber}`)
-      .get(`http://localhost:5000/api/borrow/${mobileNumber}`)
+      // .get(`http://localhost:5000/api/borrow/${mobileNumber}`)
+      .get(`https://bank-backend7.onrender.com/api/borrow/${mobileNumber}`)
       .then((response) => {
         const filteredAmountArray = response.data.amountArray.filter((arr) => {
           return arr.Remaining > 0;
@@ -97,7 +98,8 @@ const Borrow = () => {
 
   const toggleDecrement = async () => {
     try {
-      const response = await fetch("http://localhost:5000/toggle-decrement", {
+      // const response = await fetch("http://localhost:5000/toggle-decrement", {
+      const response = await fetch("https://bank-backend7.onrender.com/toggle-decrement", {
         mobileNumber : mobileNumber,
         method: "POST",
       });
@@ -120,7 +122,8 @@ const Borrow = () => {
       // Call the backend API to store the borrow details
       axios
         // .post(`https://bank-backend7.onrender.com/api/borrow/${mobileNumber}`, {
-        .post(`http://localhost:5000/api/borrow/${mobileNumber}`, {
+        // .post(`http://localhost:5000/api/borrow/${mobileNumber}`, {
+        .post(`https://bank-backend7.onrender.com/api/borrow/${mobileNumber}`, {
           amount: borrowAmount,
           maturityAmount: maturityAmount,
         })
@@ -128,7 +131,8 @@ const Borrow = () => {
           // Fetch the updated borrow details from the backend API
           axios
             // .get(`https://bank-backend7.onrender.com/api/borrow/${mobileNumber}`)
-            .get(`http://localhost:5000/api/borrow/${mobileNumber}`)
+            // .get(`http://localhost:5000/api/borrow/${mobileNumber}`)
+            .get(`https://bank-backend7.onrender.com/api/borrow/${mobileNumber}`)
             .then((response) => {
               const filteredAmountArray = response.data.amountArray.filter(
                 (arr) => {
@@ -176,8 +180,9 @@ const Borrow = () => {
 
   const HandleNameChange = async () => {
     const Nname = prompt("Enter New Name: ");
-    axios
-      .post(`http://localhost:5000/api/namechange/${mobileNumber}/${Nname}`)
+    axios           
+      // .post(`http://localhost:5000/api/namechange/${mobileNumber}/${Nname}`)
+      .post(`https://bank-backend7.onrender.com/api/namechange/${mobileNumber}/${Nname}`)
       .then(() => {
         console.log("Name changed to ", Nname);
         // Update the names state with the new name

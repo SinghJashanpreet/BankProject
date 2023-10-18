@@ -17,7 +17,8 @@ const Login = () => {
     try {
       // Call the backend API for login with the correct URL
       // const response = await axios.post("https://bank-backend7.onrender.com/api/login", {
-      const response = await axios.post("http://localhost:5000/api/login", {
+      // const response = await axios.post("http://localhost:5000/api/login", {
+      const response = await axios.post("https://bank-backend7.onrender.com/api/login", {
         mobileNumber,
         name,
         selectedDate,

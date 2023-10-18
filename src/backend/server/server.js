@@ -2,13 +2,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
-const cron = require('node-cron');
+const cron = require("node-cron");
 const { v4: uuidv4 } = require("uuid");
 
 app.use(
   cors({
-    // origin: "https://loanapp1.netlify.app",
-    origin: "http://localhost:3000",
+    origin: "https://loanappbyjs.netlify.app/",
+    //origin: "http://localhost:3000",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
@@ -19,8 +19,8 @@ const username = encodeURIComponent("officialkhalsajs");
 const password = encodeURIComponent("J@sh@njo0");
 const dbName = "Borrows"; // Replace 'your-database-name' with your actual database name
 
-// const uri = `mongodb+srv://${username}:${password}@cluster0.cutxstq.mongodb.net/${dbName}?retryWrites=true&w=majority`;
-const uri = `mongodb://127.0.0.1:27017/borrowDB`;
+ const uri = `mongodb+srv://${username}:${password}@cluster0.cutxstq.mongodb.net/${dbName}?retryWrites=true&w=majority`;
+// const uri = `mongodb://127.0.0.1:27017/borrowDB`;
 
 mongoose
   .connect(uri, {
@@ -58,7 +58,6 @@ const borrowSchema = new mongoose.Schema({
   name: String,
 });
 
-
 const Borrow = mongoose.model("borrow", borrowSchema);
 
 module.exports = Borrow;
@@ -69,17 +68,16 @@ app.use(express.json());
 const authRoutes = require("../routes/auth");
 app.use("/api", authRoutes);
 
-
-app.post('/deduct-emi', async (req, res) => {
+app.post("/deduct-emi", async (req, res) => {
   try {
     const currentDate = new Date().toLocaleDateString(); // Format the current date
-    const docs = await Borrow.find({ 'amountArray.Automate': true }).exec();
+    const docs = await Borrow.find({ "amountArray.Automate": true }).exec();
     for (const doc of docs) {
       for (const item of doc.amountArray) {
         if (item.Automate) {
           // Deduct EMI from Remaining
           item.Remaining -= item.emi;
-          
+
           // Push a new Transaction object
           item.Transactions.push({ amount: item.emi, date: currentDate });
         }
@@ -88,39 +86,39 @@ app.post('/deduct-emi', async (req, res) => {
     }
     res.json({ success: true });
   } catch (err) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
 // Schedule the EMI deduction API to run daily
-cron.schedule('0 0 * * *', async () => {
+cron.schedule("0 0 * * *", async () => {
   try {
     // Call the EMI deduction API
-    await fetch('http://localhost:5000/deduct-emi', {
-      method: 'POST',
+    // await fetch('http://localhost:5000/deduct-emi', {
+    await fetch("https://bank-backend7.onrender.com/deduct-emi", {
+      method: "POST",
     });
   } catch (error) {
-    console.error('Error running EMI deduction:', error);
+    console.error("Error running EMI deduction:", error);
   }
 });
 
-
 // Define a route for toggling EMI deduction
-app.post('/toggle-decrement', async (req, res) => {
+app.post("/toggle-decrement", async (req, res) => {
   try {
     const { userId, date, automate } = req.body;
     // Find the user by userId
     const user = await BorrowModel.findOne({ userId });
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: "User not found" });
     }
 
     // Find the amountArray item for the specified date
     const item = user.amountArray.find((a) => a.DateBorrow === date);
 
     if (!item) {
-      return res.status(404).json({ error: 'Date not found' });
+      return res.status(404).json({ error: "Date not found" });
     }
 
     // Toggle the automate field
@@ -131,10 +129,9 @@ app.post('/toggle-decrement', async (req, res) => {
 
     return res.json({ success: true });
   } catch (err) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 app.get("/api/borrow/", async (req, res) => {
   try {
@@ -155,11 +152,9 @@ app.get("/api/borrow/:mobileNumber", async (req, res) => {
     if (name !== undefined) var borrowItem = await Borrow.findOne({ name });
     else var borrowItem = await Borrow.findOne({ mobileNumber });
 
-    
-      if (!borrowItem) {
-        return res.status(404).json({ error: "User not found" });
-      }
-   
+    if (!borrowItem) {
+      return res.status(404).json({ error: "User not found" });
+    }
 
     res.status(200).json(borrowItem);
   } catch (error) {
@@ -216,12 +211,12 @@ app.post("/api/borrow/:mobileNumber/:idx", async (req, res) => {
       const data = Data.amountArray.filter((arr) => {
         return arr.id === idx;
       });
-      
+
       const obj = {
         amount: -deductionAmount,
         date: new Date().toLocaleDateString(),
       };
-      
+
       // Update the specific element within amountArray that matches the id
       const updatedAmountArray = Data.amountArray.map((item) => {
         if (item.id === idx) {
@@ -230,11 +225,11 @@ app.post("/api/borrow/:mobileNumber/:idx", async (req, res) => {
         }
         return item;
       });
-      
+
       Data.amountArray = updatedAmountArray;
-      
+
       console.log(data);
-      
+
       var updatedItem = await Borrow.findOneAndUpdate(
         {
           name: name,
@@ -244,7 +239,6 @@ app.post("/api/borrow/:mobileNumber/:idx", async (req, res) => {
         },
         { new: true }
       );
-      
     } else {
       var Data = await Borrow.findOne({ mobileNumber });
       var updatedItem = await Borrow.findOneAndUpdate(

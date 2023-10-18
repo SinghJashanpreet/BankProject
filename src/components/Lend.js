@@ -12,7 +12,8 @@ const Lend = () => {
 
     axios
       // .get(`https://bank-backend7.onrender.com/api/borrow/${mobileNumber}`)
-      .get(`http://localhost:5000/api/borrow/${mobileNumber}`)
+      // .get(`http://localhost:5000/api/borrow/${mobileNumber}`)
+      .get(`https://bank-backend7.onrender.com/api/borrow/${mobileNumber}`)
       .then((response) => {
         // console.log(
         //   response.data.amountArray.filter((arr) => {
@@ -43,7 +44,8 @@ const Lend = () => {
       axios
         .post(
           // `https://bank-backend7.onrender.com/api/borrow/${mobileNumber}/${idx}`
-          `http://localhost:5000/api/borrow/${mobileNumber}/${idx}`,
+          // `http://localhost:5000/api/borrow/${mobileNumber}/${idx}`,
+          `https://bank-backend7.onrender.com/api/borrow/${mobileNumber}/${idx}`,
           {
             deductAm: deductAm,
           }
