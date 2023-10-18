@@ -361,8 +361,12 @@ const Borrow = () => {
           View Past Account
         </button>
 
-        <button onClick={HandleNameChange}
-        className="bg-[#4070f4] text-white font-medium py-3 px-2 rounded-lg fixed left-[12%] bottom-[22%]">Edit Name</button>
+        <button
+          onClick={HandleNameChange}
+          className="bg-[#4070f4] text-white font-medium py-3 px-2 rounded-lg fixed left-[12%] bottom-[22%]"
+        >
+          Edit Name
+        </button>
       </div>
     </div>
   );
