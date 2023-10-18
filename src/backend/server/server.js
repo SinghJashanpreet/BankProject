@@ -7,7 +7,7 @@ const { v4: uuidv4 } = require("uuid");
 
 app.use(
   cors({
-    origin: "https://loanappbyjs.netlify.app/",
+    origin: "https://loanappbyjs.netlify.app",
     //origin: "http://localhost:3000",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
