@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
+const cron = require('node-cron');
 const { v4: uuidv4 } = require("uuid");
 
 app.use(
@@ -49,19 +50,14 @@ const borrowSchema = new mongoose.Schema({
         },
       ],
       Automate: Boolean,
+      emi: Number,
     },
   ],
   // dateArray: [String],
-  transactions: [
-    {
-      amount: Number,
-      date: String,
-      num: String,
-    },
-  ],
   mobileNumber: String,
   name: String,
 });
+
 
 const Borrow = mongoose.model("borrow", borrowSchema);
 
@@ -72,6 +68,73 @@ app.use(express.json());
 // Add routes for user registration and login
 const authRoutes = require("../routes/auth");
 app.use("/api", authRoutes);
+
+
+app.post('/deduct-emi', async (req, res) => {
+  try {
+    const currentDate = new Date().toLocaleDateString(); // Format the current date
+    const docs = await Borrow.find({ 'amountArray.Automate': true }).exec();
+    for (const doc of docs) {
+      for (const item of doc.amountArray) {
+        if (item.Automate) {
+          // Deduct EMI from Remaining
+          item.Remaining -= item.emi;
+          
+          // Push a new Transaction object
+          item.Transactions.push({ amount: item.emi, date: currentDate });
+        }
+      }
+      await doc.save();
+    }
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Schedule the EMI deduction API to run daily
+cron.schedule('0 0 * * *', async () => {
+  try {
+    // Call the EMI deduction API
+    await fetch('http://localhost:5000/deduct-emi', {
+      method: 'POST',
+    });
+  } catch (error) {
+    console.error('Error running EMI deduction:', error);
+  }
+});
+
+
+// Define a route for toggling EMI deduction
+app.post('/toggle-decrement', async (req, res) => {
+  try {
+    const { userId, date, automate } = req.body;
+    // Find the user by userId
+    const user = await BorrowModel.findOne({ userId });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Find the amountArray item for the specified date
+    const item = user.amountArray.find((a) => a.DateBorrow === date);
+
+    if (!item) {
+      return res.status(404).json({ error: 'Date not found' });
+    }
+
+    // Toggle the automate field
+    item.Automate = automate;
+
+    // Save the updated document
+    await user.save();
+
+    return res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 
 app.get("/api/borrow/", async (req, res) => {
   try {
@@ -109,7 +172,7 @@ app.get("/api/borrow/:mobileNumber", async (req, res) => {
 
 app.post("/api/borrow/:mobileNumber", async (req, res) => {
   const { mobileNumber } = req.params;
-  const { amount } = req.body;
+  const { amount, maturityAmount } = req.body;
   const currentDate = new Date();
   const dateString = currentDate.toLocaleDateString();
   const name = !isNaN(mobileNumber) ? undefined : mobileNumber;
@@ -121,14 +184,12 @@ app.post("/api/borrow/:mobileNumber", async (req, res) => {
       borrowItem = new Borrow({
         mobileNumber,
         amountArray: [],
-        // dateArray: [],
-        //transactions: [],
       });
     }
     const obj = {
       id: uuidv4(),
       TotalBorrow: amount,
-      Remaining: amount,
+      Remaining: maturityAmount,
       DateBorrow: dateString,
     };
     borrowItem.amountArray.push(obj);

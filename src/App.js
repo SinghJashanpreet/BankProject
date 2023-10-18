@@ -17,8 +17,8 @@ const App = () => {
       <Route path="/register" element={<Registration />} />
       <Route path="/login" element={<Login/>} />
       <Route path="/daybook" element={<DayBookPage/>} />
-      <Route path="/terminationdata" element={<TerminationData/>} />
-      <Route path="/daybookdata" element={<DayBookData/>} />
+      <Route path="/terminationdata/:enteredDate" element={<TerminationData/>} />
+      <Route path="/daybookdata/:enteredDate" element={<DayBookData/>} />
       <Route path="/borrow/:mobileNumber" element={<Borrow />} />
       <Route path="/pastaccount/:mobileNumber" element={<PastAccounts/>} />
       <Route path="/lend/:mobileNumber/:idx" element={<Lend />} />

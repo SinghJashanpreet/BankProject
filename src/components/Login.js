@@ -8,6 +8,7 @@ const Login = () => {
   const [mobileNumber, setMobileNumber] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState("");
+  const [enteredDate, setEnteredDate] = useState(null);
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -84,20 +85,20 @@ const Login = () => {
                 placeholder="Enter Termination Date "
                 required
                 value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
+                onChange={(ev) => setEnteredDate(ev.target.value)}
               />
             </div>
             <div className="input-field button">
               <input
                 type="button"
                 value="Search"
-                onClick={() => navigate("/terminationdata")}
+                onClick={()=>navigate(`/terminationdata/${enteredDate}`)}
               />
             </div>
           </form>
         </div>
 
-        <div className="form login">
+        {/* <div className="form login">
           {error && <p style={{ color: "red" }}>{error}</p>}
           <form action="#">
             <div className="input-field">
@@ -113,7 +114,7 @@ const Login = () => {
               <input type="button" value="Search" onClick={handleLogin} />
             </div>
           </form>
-        </div>
+        </div> */}
       </div>
     </div>
   );

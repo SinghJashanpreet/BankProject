@@ -30,100 +30,89 @@ function get100thDayExcludingSundays(startDateStr) {
 }
 
 function PastAccounts() {
-  
   const location = useLocation();
-
   // Access the pastList from the location state
   const borrowList = location.state?.pastList || [];
-  console.log(borrowList)
+  //console.log(borrowList);
   return (
     <div className="Bbody">
-    <div className="Bcontainer example">
-      <div className="Bamounts">
-        <h2>Past Accounts List</h2>
-        <ul className="ull">
-          {/* {console.log(borrowList)} */}
-          {borrowList.length == 0 ? (
-            <h1></h1>
-          ) : (
-            <>
-              <table
-                style={{
-                  borderCollapse: "collapse",
-                  width: "100%",
-                  border: "1px solid #ccc",
-                }}
-              >
-                <thead>
-                  <tr>
-                    <th style={{ padding: "10px", border: "1px solid #ccc" }}>
-                      Sr No.
-                    </th>
-                    <th style={{ padding: "10px", border: "1px solid #ccc" }}>
-                      Date Borrow
-                    </th>
-                    <th style={{ padding: "10px", border: "1px solid #ccc" }}>
-                      Amount Borrow
-                    </th>
-                    <th style={{ padding: "10px", border: "1px solid #ccc" }}>
-                      Amount Remaining
-                    </th>
-                    <th style={{ padding: "10px", border: "1px solid #ccc" }}>
-                      Date Maturity
-                    </th>
-                  
-                   
-                  </tr>
-                </thead>
-                <tbody>
-                  {borrowList.amountArray.map((amount, subIndex) => (
-                    <tr key={subIndex}>
-                      <td
-                        style={{ padding: "10px", border: "1px solid #ccc" }}
-                      >
-                        {subIndex + 1}
-                      </td>
-                      <td
-                        style={{ padding: "10px", border: "1px solid #ccc" }}
-                      >
-                        {convertDateFormat(amount.DateBorrow)}
-                      </td>
-                      <td
-                        style={{ padding: "10px", border: "1px solid #ccc" }}
-                      >
-                        {amount.TotalBorrow} Rs.
-                      </td>
-                      <td
-                        style={{ padding: "10px", border: "1px solid #ccc" }}
-                      >
-                        {amount.Remaining} Rs.
-                      </td>
-                      <td
-                        style={{ padding: "10px", border: "1px solid #ccc" }}
-                      >
-                        {get100thDayExcludingSundays(
-                         amount.DateBorrow
-                        )}
-                      </td>
-                    
-                  
+      <div className="Bcontainer example">
+        <div className="Bamounts">
+          <h2>Past Accounts List</h2>
+          <ul className="ull">
+            {/* {console.log(borrowList)} */}
+            {borrowList.length == 0 ? (
+              <h1></h1>
+            ) : (
+              <>
+                <table
+                  style={{
+                    borderCollapse: "collapse",
+                    width: "100%",
+                    border: "1px solid #ccc",
+                  }}
+                >
+                  <thead>
+                    <tr>
+                      <th style={{ padding: "10px", border: "1px solid #ccc" }}>
+                        Sr No.
+                      </th>
+                      <th style={{ padding: "10px", border: "1px solid #ccc" }}>
+                        Date Borrow
+                      </th>
+                      <th style={{ padding: "10px", border: "1px solid #ccc" }}>
+                        Amount Borrow
+                      </th>
+                      <th style={{ padding: "10px", border: "1px solid #ccc" }}>
+                        Amount Remaining
+                      </th>
+                      <th style={{ padding: "10px", border: "1px solid #ccc" }}>
+                        Date Maturity
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>{" "}
-            </>
-          )}
-          {/*  */}
-        </ul>
+                  </thead>
+                  <tbody>
+                    {borrowList.amountArray.map((amount, subIndex) => (
+                      <tr key={subIndex}>
+                        <td
+                          style={{ padding: "10px", border: "1px solid #ccc" }}
+                        >
+                          {subIndex + 1}
+                        </td>
+                        <td
+                          style={{ padding: "10px", border: "1px solid #ccc" }}
+                        >
+                          {convertDateFormat(amount.DateBorrow)}
+                        </td>
+                        <td
+                          style={{ padding: "10px", border: "1px solid #ccc" }}
+                        >
+                          {amount.TotalBorrow} Rs.
+                        </td>
+                        <td
+                          style={{ padding: "10px", border: "1px solid #ccc" }}
+                        >
+                          {amount.Remaining} Rs.
+                        </td>
+                        <td
+                          style={{ padding: "10px", border: "1px solid #ccc" }}
+                        >
+                          {get100thDayExcludingSundays(amount.DateBorrow)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>{" "}
+              </>
+            )}
+            {/*  */}
+          </ul>
+        </div>
+        <div className="Bbutton">
+          <input type="button" value="Go Back" />
+        </div>
       </div>
-      <div className="Bbutton">
-        <input type="button" value="Go Back"/>
-      </div>
-
-      
-     
     </div>
-  </div>
   );
 }
 

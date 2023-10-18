@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import "../css/Borrow.css";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
@@ -10,9 +9,12 @@ const Borrow = () => {
   const [PastList, setPastList] = useState([]);
   // const [List, setBorrowList] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [lend, setLend] = useState(0);
+  const [ProfitTill, setProfitTill] = useState(0);
   const [error, setError] = useState("");
   const [names, setName] = useState("");
   const navigate = useNavigate();
+  const [shouldDecrement, setShouldDecrement] = useState(false);
 
   useEffect(() => {
     // Fetch the borrow details from the backend API
@@ -25,7 +27,8 @@ const Borrow = () => {
         });
         const filteredPastAmountArray = response.data.amountArray.filter(
           (arr) => {
-            return arr.Remaining <= 0;
+            //console.log()
+            return arr.Remaining <= 0 || (get100thDayExcludingSundays(new Date(arr.DateBorrow).toLocaleDateString()) < (new Date().toLocaleDateString()));
           }
         );
         // Update borrowList using the filtered amountArray
@@ -45,6 +48,14 @@ const Borrow = () => {
           0
         );
 
+        const totalBorrow = response.data.amountArray.reduce(
+          (total, amount) => total + amount.TotalBorrow,
+          0
+        );
+
+        //setLend();
+        const profit = (totalBorrow * 10) / 9 - totalBorrow;
+        setProfitTill(profit);
         setTotalAmount(total);
         setError("");
       })
@@ -60,6 +71,7 @@ const Borrow = () => {
     return formattedDate;
   }
   function get100thDayExcludingSundays(startDateStr) {
+    
     const startDate = new Date(startDateStr);
     const oneDayInMilliseconds = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
     let count = 0;
@@ -79,17 +91,38 @@ const Borrow = () => {
     }
     var parts = startDate.toLocaleDateString().split("/");
     var formattedDate = parts[1] + "/" + parts[0] + "/" + parts[2];
+    
     return formattedDate;
   }
 
+  const toggleDecrement = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/toggle-decrement", {
+        mobileNumber : mobileNumber,
+        method: "POST",
+      });
+      if (response.ok) {
+        setShouldDecrement(!shouldDecrement);
+      } else {
+        // Handle the response if there's an error
+        console.error("Request failed with status: " + response.status);
+      }
+    } catch (error) {
+      // Handle any other errors
+      console.error("An error occurred:", error);
+    }
+  };
+
   const handleBorrow = () => {
     const borrowAmount = prompt("Enter the Amount to borrow: ");
+    const maturityAmount = (borrowAmount * 10) / 9;
     if (borrowAmount !== null) {
       // Call the backend API to store the borrow details
       axios
         // .post(`https://bank-backend7.onrender.com/api/borrow/${mobileNumber}`, {
         .post(`http://localhost:5000/api/borrow/${mobileNumber}`, {
           amount: borrowAmount,
+          maturityAmount: maturityAmount,
         })
         .then(() => {
           // Fetch the updated borrow details from the backend API
@@ -112,8 +145,14 @@ const Borrow = () => {
                 (total, amount) => total + amount.Remaining,
                 0
               );
+              const totalBorrow = response.data.amountArray.reduce(
+                (total, amount) => total + amount.TotalBorrow,
+                0
+              );
+              const profit = (totalBorrow * 10) / 9 - totalBorrow;
+              setProfitTill(profit);
               setTotalAmount(total);
-             
+
               setError("");
             })
             .catch((error) => {
@@ -143,13 +182,14 @@ const Borrow = () => {
         console.log("Name changed to ", Nname);
         // Update the names state with the new name
         setName(Nname);
+        navigate(`/login`);
       })
       .catch((e) => {
         console.log(e);
       });
   };
 
-  const lendAmount = 25000;
+ const lendAmount = 30000;
 
   return (
     <div className="Bbody">
@@ -160,11 +200,11 @@ const Borrow = () => {
           <h3 className="text-[22px] font-bold">
             Total Outstanding: {totalAmount} Rs.
           </h3>
-          <h3 className="text-[22px] font-bold">
+          {/* <h3 className="text-[22px] font-bold">
             Lend Amount: {lendAmount} Rs.
-          </h3>
+          </h3> */}
           <h3 className="text-[22px] font-bold">
-            Profit Till: {totalAmount - lendAmount} Rs.
+            Profit Till: {ProfitTill} Rs.
           </h3>
         </div>
         <div className="Bamounts">
@@ -261,7 +301,11 @@ const Borrow = () => {
                               border: "1px solid #ccc",
                             }}
                           >
-                            on/off
+                            <button
+                              onClick={toggleDecrement}
+                            >
+                              {shouldDecrement ? "on" : "off"}
+                            </button>
                           </td>
                           <td
                             style={{

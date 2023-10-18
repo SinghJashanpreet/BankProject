@@ -25,11 +25,11 @@ const Lend = () => {
             return arr.id == idx;
           })
         );
-        console.log(
-          response.data.amountArray.filter((arr) => {
-            return arr.id == idx;
-          })[0].Transactions
-        );
+        // console.log(
+        //   response.data.amountArray.filter((arr) => {
+        //     return arr.id == idx;
+        //   })[0].Transactions
+        // );
       })
       .catch((error) => {
         console.log("Error fetching transactions:", error);
@@ -70,7 +70,7 @@ const Lend = () => {
   };
 
   function convertDateFormat(inputDate) {
-    
+
     var parts = inputDate.split("/");
     var formattedDate = parts[1] + "/" + parts[0] + "/" + parts[2];
     return formattedDate;
@@ -89,7 +89,7 @@ const Lend = () => {
           <ul>
             {/* {transactions.map((transaction, index) => (
               <li key={index} style="list-style-type:disc">
-                Amount: {transaction.amount} Rs. (Date: {transaction.date}) 
+                Amount: {transaction.amount} Rs. (Date: {transaction.date})
                 Loan Number: {(transaction.num)}
               </li>
             ))} */}
