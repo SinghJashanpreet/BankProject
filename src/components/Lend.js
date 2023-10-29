@@ -83,8 +83,7 @@ const Lend = () => {
       <div className="Lcontainer example">
         <div className="Lheading">
           <h1 className="text-[35px] font-semibold underline">
-            Transactions : ({mobileNumber})
-            <br></br>
+            Transactions : ({mobileNumber})<br></br>
           </h1>
         </div>
         <div className="Lamounts example">

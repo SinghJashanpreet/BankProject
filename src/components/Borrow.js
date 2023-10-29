@@ -104,7 +104,7 @@ const Borrow = () => {
     try {
       // const response = await fetch("http://localhost:5000/toggle-decrement", {
       const response = await fetch(window.backendUrl + "toggle-decrement", {
-        mobileNumber : mobileNumber,
+        mobileNumber: mobileNumber,
         method: "POST",
       });
       if (response.ok) {
@@ -172,6 +172,37 @@ const Borrow = () => {
                 "Error fetching borrow details. Please try again later."
               );
             });
+
+
+
+          axios
+            .post(
+              // `https://bank-backend7.onrender.com/api/borrow/${mobileNumber}/${idx}`
+              // `http://localhost:5000/api/borrow/${mobileNumber}/${idx}`,
+              window.backendUrl + `borrow/${mobileNumber}/${idx}`,
+              {
+                deductAm: parseInt(maturityAmount) / 100,
+              }
+            )
+            .then((response) => {
+              //console.log(response);
+              // Update the transactions with the updated item from the response
+              // setTransactions((prevTransactions) => {
+              //   const updatedTransactions = [...prevTransactions];
+              //   const currentDate = new Date().toLocaleDateString();
+
+              //   // Add a new transaction to the array with the deducted amount and current date
+              //   updatedTransactions.push({
+              //     amount: -(parseInt(maturityAmount) / 100), // Deducted amount
+              //     date: currentDate, // Current date
+              //   });
+              //   return updatedTransactions;
+              // });
+              console.log("*first emi deducted*")
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         })
         .catch((error) => {
           console.log(error);
@@ -190,8 +221,7 @@ const Borrow = () => {
 
     if (Nname === null) return;
 
-
-    axios           
+    axios
       // .post(`http://localhost:5000/api/namechange/${mobileNumber}/${Nname}`)
       .post(window.backendUrl + `namechange/${mobileNumber}/${Nname}`)
 
