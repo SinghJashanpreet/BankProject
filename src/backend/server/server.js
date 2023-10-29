@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -19,7 +20,7 @@ const username = encodeURIComponent("officialkhalsajs");
 const password = encodeURIComponent("J@sh@njo0");
 const dbName = "Borrows"; // Replace 'your-database-name' with your actual database name
 
- const uri = `mongodb+srv://${username}:${password}@cluster0.cutxstq.mongodb.net/${dbName}?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${username}:${password}@cluster0.cutxstq.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 // const uri = `mongodb://127.0.0.1:27017/borrowDB`;
 
 mongoose
@@ -68,7 +69,7 @@ app.use(express.json());
 const authRoutes = require("../routes/auth");
 app.use("/api", authRoutes);
 
-app.post("/deduct-emi", async (req, res) => {
+app.post("/api/deduct-emi", async (req, res) => {
   try {
     const currentDate = new Date().toLocaleDateString(); // Format the current date
     const docs = await Borrow.find({ "amountArray.Automate": true }).exec();
@@ -95,7 +96,7 @@ cron.schedule("0 0 * * *", async () => {
   try {
     // Call the EMI deduction API
     // await fetch('http://localhost:5000/deduct-emi', {
-    await fetch("https://bank-backend7.onrender.com/deduct-emi", {
+    await fetch(window.backendUrl + "deduct-emi", {
       method: "POST",
     });
   } catch (error) {
@@ -104,7 +105,7 @@ cron.schedule("0 0 * * *", async () => {
 });
 
 // Define a route for toggling EMI deduction
-app.post("/toggle-decrement", async (req, res) => {
+app.post("/api/toggle-decrement", async (req, res) => {
   try {
     const { userId, date, automate } = req.body;
     // Find the user by userId

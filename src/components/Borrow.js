@@ -21,7 +21,7 @@ const Borrow = () => {
     axios
       // .get(`https://bank-backend7.onrender.com/api/borrow/${mobileNumber}`)
       // .get(`http://localhost:5000/api/borrow/${mobileNumber}`)
-      .get(`https://bank-backend7.onrender.com/api/borrow/${mobileNumber}`)
+      .get(window.backendUrl + `borrow/${mobileNumber}`)
       .then((response) => {
         const filteredAmountArray = response.data.amountArray.filter((arr) => {
           return arr.Remaining > 0;
@@ -103,7 +103,7 @@ const Borrow = () => {
   const toggleDecrement = async () => {
     try {
       // const response = await fetch("http://localhost:5000/toggle-decrement", {
-      const response = await fetch("https://bank-backend7.onrender.com/toggle-decrement", {
+      const response = await fetch(window.backendUrl + "toggle-decrement", {
         mobileNumber : mobileNumber,
         method: "POST",
       });
@@ -130,7 +130,7 @@ const Borrow = () => {
       axios
         // .post(`https://bank-backend7.onrender.com/api/borrow/${mobileNumber}`, {
         // .post(`http://localhost:5000/api/borrow/${mobileNumber}`, {
-        .post(`https://bank-backend7.onrender.com/api/borrow/${mobileNumber}`, {
+        .post(window.backendUrl + `borrow/${mobileNumber}`, {
           amount: borrowAmount,
           maturityAmount: maturityAmount,
         })
@@ -139,7 +139,7 @@ const Borrow = () => {
           axios
             // .get(`https://bank-backend7.onrender.com/api/borrow/${mobileNumber}`)
             // .get(`http://localhost:5000/api/borrow/${mobileNumber}`)
-            .get(`https://bank-backend7.onrender.com/api/borrow/${mobileNumber}`)
+            .get(window.backendUrl + `borrow/${mobileNumber}`)
             .then((response) => {
               const filteredAmountArray = response.data.amountArray.filter(
                 (arr) => {
@@ -193,7 +193,7 @@ const Borrow = () => {
 
     axios           
       // .post(`http://localhost:5000/api/namechange/${mobileNumber}/${Nname}`)
-      .post(`https://bank-backend7.onrender.com/api/namechange/${mobileNumber}/${Nname}`)
+      .post(window.backendUrl + `namechange/${mobileNumber}/${Nname}`)
 
       .then(() => {
         console.log("Name changed to ", Nname);

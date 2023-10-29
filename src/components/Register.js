@@ -25,7 +25,7 @@ const Register = () => {
     // Send a POST request to register the new user
     axios
       // .post("http://localhost:5000/api/register", {
-      .post("https://bank-backend7.onrender.com/api/register", {
+      .post(window.backendUrl + "register", {
         name,
         mobileNumber,
       })

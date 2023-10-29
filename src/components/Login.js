@@ -15,7 +15,7 @@ const Login = () => {
   useEffect(()=>{
     const doit = async() =>{
       try{
-        const response = await fetch('https://bank-backend7.onrender.com/api/borrow');
+        const response = await fetch(window.backendUrl + 'borrow');
         if (response.ok) {
           const data = await response.json();
           setNameData(data.map((a)=>a.name));
@@ -34,9 +34,9 @@ const Login = () => {
 
     try {
       // Call the backend API for login with the correct URL
-      // const response = await axios.post("https://bank-backend7.onrender.com/api/login", {
+      // const response = await axios.post(window.backendUrl + "login", {
       // const response = await axios.post("http://localhost:5000/api/login", {
-      const response = await axios.post("https://bank-backend7.onrender.com/api/login", {
+      const response = await axios.post(window.backendUrl + "login", {
         mobileNumber,
         name,
         selectedDate,
