@@ -125,6 +125,7 @@ const Borrow = () => {
     if (borrowAmount === null) return;
 
     const maturityAmount = (borrowAmount * 10) / 9;
+    let idFromArray;
     if (borrowAmount !== null) {
       // Call the backend API to store the borrow details
       axios
@@ -146,6 +147,7 @@ const Borrow = () => {
                   return arr.Remaining > 0;
                 }
               );
+              idFromArray = filteredAmountArray[filteredAmountArray.length - 1].id;
               // Update borrowList using the filtered amountArray
               setBorrowList({
                 ...response.data,
@@ -179,7 +181,7 @@ const Borrow = () => {
             .post(
               // `https://bank-backend7.onrender.com/api/borrow/${mobileNumber}/${idx}`
               // `http://localhost:5000/api/borrow/${mobileNumber}/${idx}`,
-              window.backendUrl + `borrow/${mobileNumber}/${idx}`,
+              window.backendUrl + `borrow/${mobileNumber}/${idFromArray}`,
               {
                 deductAm: parseInt(maturityAmount) / 100,
               }
