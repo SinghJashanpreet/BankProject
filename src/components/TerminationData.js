@@ -141,7 +141,7 @@ function TerminationData() {
                       Borrow Amount
                     </th>
                     <th style={{ padding: "10px", border: "1px solid #ccc" }}>
-                      Returned Amount
+                      Return Amount
                     </th>
                   </tr>
                 </thead>
@@ -185,7 +185,7 @@ function TerminationData() {
                                 border: "1px solid #ccc",
                               }}
                             >
-                              {arr.returned}
+                              {arr.TotalBorrow * 10 / 9}
                             </td>
                           </tr>
                         );

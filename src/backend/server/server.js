@@ -168,7 +168,7 @@ app.get("/api/borrow/:mobileNumber", async (req, res) => {
 
 app.post("/api/borrow/:mobileNumber", async (req, res) => {
   const { mobileNumber } = req.params;
-  const { amount, maturityAmount } = req.body;
+  const { amount, maturityAmount, Automate } = req.body;
   const currentDate = new Date();
   const dateString = currentDate.toLocaleDateString();
   const name = !isNaN(mobileNumber) ? undefined : mobileNumber;
@@ -187,6 +187,7 @@ app.post("/api/borrow/:mobileNumber", async (req, res) => {
       TotalBorrow: amount,
       Remaining: maturityAmount,
       DateBorrow: dateString,
+      Automate: Automate,
     };
     borrowItem.amountArray.push(obj);
     //borrowItem.dateArray.push(dateString);
@@ -256,6 +257,144 @@ app.post("/api/borrow/:mobileNumber/:idx", async (req, res) => {
         { new: true }
       );
     }
+
+    if (!updatedItem) {
+      // Borrow item with the given itemId not found
+      return res.status(404).json({ error: "Borrow item not found" });
+    }
+
+    res.status(200).json(updatedItem);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ error: "Error deducting amount from the borrow item" });
+  }
+});
+
+app.post("/api/automate/:mobileNumber/:idx", async (req, res) => {
+  const { mobileNumber, idx } = req.params;
+  const { deductAm } = req.body;
+  //const { Automate } = req.body;
+  const name = !isNaN(mobileNumber) ? undefined : mobileNumber;
+  //const deductionAmount = deductAm; // Assuming you want to deduct 100 Rs.
+
+  try {
+    // Find the borrow item by its _id and update the arrays
+    if (name !== undefined) {
+      var Data = await Borrow.findOne({ name });
+      const data = Data.amountArray.filter((arr) => {
+        return arr.id === idx;
+      });
+
+      // Update the specific element within amountArray that matches the id
+      const updatedAmountArray = Data.amountArray.map((item) => {
+        if (item.id === idx) {
+          // item.Remaining = item.Remaining - deductionAmount;
+          // item.Transactions.push(obj);
+          item.Automate = !item.Automate;
+        }
+        return item;
+      });
+
+      Data.amountArray = updatedAmountArray;
+
+      console.log(data);
+
+      var updatedItem = await Borrow.findOneAndUpdate(
+        {
+          name: name,
+        },
+        {
+          $set: { amountArray: Data.amountArray },
+        },
+        { new: true }
+      );
+    }
+    // else {
+    //   var Data = await Borrow.findOne({ mobileNumber });
+    //   var updatedItem = await Borrow.findOneAndUpdate(
+    //     { mobileNumber: mobileNumber, "amountArray.id": idx },
+    //     {
+    //       $inc: { "amountArray.$.Remaining": -deductionAmount }, // Deduct the amount from the specific element in the amountArray
+    //       $push: {
+    //         "amountArray.$.Transactions": {
+    //           amount: -deductionAmount,
+    //           date: new Date().toLocaleDateString(),
+    //         },
+    //       },
+    //     },
+    //     { new: true }
+    //   );
+    // }
+
+    if (!updatedItem) {
+      // Borrow item with the given itemId not found
+      return res.status(404).json({ error: "Borrow item not found" });
+    }
+
+    res.status(200).json(updatedItem);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ error: "Error deducting amount from the borrow item" });
+  }
+});
+
+app.post("/api/changeborrowdate/:mobileNumber/:idx", async (req, res) => {
+  const { mobileNumber, idx } = req.params;
+  const { newBorrowDate } = req.body;
+  //const { Automate } = req.body;
+  const name = !isNaN(mobileNumber) ? undefined : mobileNumber;
+  //const deductionAmount = deductAm; // Assuming you want to deduct 100 Rs.
+
+  try {
+    // Find the borrow item by its _id and update the arrays
+    if (name !== undefined) {
+      var Data = await Borrow.findOne({ name });
+      const data = Data.amountArray.filter((arr) => {
+        return arr.id === idx;
+      });
+
+      // Update the specific element within amountArray that matches the id
+      const updatedAmountArray = Data.amountArray.map((item) => {
+        if (item.id === idx) {
+          item.DateBorrow = newBorrowDate;
+        }
+        return item;
+      });
+
+      Data.amountArray = updatedAmountArray;
+
+      console.log(data);
+
+      var updatedItem = await Borrow.findOneAndUpdate(
+        {
+          name: name,
+        },
+        {
+          $set: { amountArray: Data.amountArray },
+        },
+        { new: true }
+      );
+    }
+    // else {
+    //   var Data = await Borrow.findOne({ mobileNumber });
+    //   var updatedItem = await Borrow.findOneAndUpdate(
+    //     { mobileNumber: mobileNumber, "amountArray.id": idx },
+    //     {
+    //       $inc: { "amountArray.$.Remaining": -deductionAmount }, // Deduct the amount from the specific element in the amountArray
+    //       $push: {
+    //         "amountArray.$.Transactions": {
+    //           amount: -deductionAmount,
+    //           date: new Date().toLocaleDateString(),
+    //         },
+    //       },
+    //     },
+    //     { new: true }
+    //   );
+    // }
 
     if (!updatedItem) {
       // Borrow item with the given itemId not found

@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 const Lend = () => {
   const { mobileNumber, idx } = useParams();
   const [transactions, setTransactions] = useState([]);
-
+  const [automate, setAutomate] = useState(false);
   useEffect(() => {
     //console.log('Fetching transactions for itemId:', mobileNumber);
 
@@ -21,11 +21,22 @@ const Lend = () => {
         //     return arr.id == (idx) ;
         //   })
         // );
-        setTransactions(
-          response.data.amountArray.filter((arr) => {
-            return arr.id == idx;
-          })
-        );
+        const gotdata = response.data.amountArray.filter((arr) => {
+          return arr.id == idx;
+        });
+        console.log("tjis is data i get", gotdata);
+        if (
+          gotdata[0]?.Transactions?.length != transactions[0]?.Transactions?.length
+        ) {
+          setTransactions(
+            response.data.amountArray.filter((arr) => {
+              return arr.id == idx;
+            })
+          );
+        }
+        //localStorage.setItem("Automate", gotdata[0].Automate)
+        console.log(automate, gotdata[0].Automate)
+        setAutomate(gotdata[0].Automate);
         // console.log(
         //   response.data.amountArray.filter((arr) => {
         //     return arr.id == idx;
@@ -35,7 +46,7 @@ const Lend = () => {
       .catch((error) => {
         console.log("Error fetching transactions:", error);
       });
-  }, [idx, mobileNumber, transactions]);
+  }, [idx, mobileNumber, transactions,automate]);
 
   const handleDeduct = () => {
     const deductAm = prompt("Enter Amount to Deduct: ");
@@ -76,6 +87,61 @@ const Lend = () => {
     var parts = inputDate.split("/");
     var formattedDate = parts[1] + "/" + parts[0] + "/" + parts[2];
     return formattedDate;
+  }
+
+  const handleAutomate = () => {
+    // console.log(automate);
+    // Call the backend API to deduct Rs. 100 for the specific borrow item
+    setAutomate(!automate)
+    axios
+      .post(
+        // `https://bank-backend7.onrender.com/api/borrow/${mobileNumber}/${idx}`
+        // `http://localhost:5000/api/borrow/${mobileNumber}/${idx}`,
+        window.backendUrl + `automate/${mobileNumber}/${idx}`,
+        {
+          Automate: automate,
+        }
+      )
+      .then((response) => {
+        //console.log(response);
+        // Update the transactions with the updated item from the response
+        // setTransactions((prevTransactions) => {
+        //   const updatedTransactions = [...prevTransactions];
+        //   const currentDate = new Date().toLocaleDateString();
+
+        //   // Add a new transaction to the array with the deducted amount and current date
+        //   updatedTransactions.push({
+        //     amount: -deductAm, // Deducted amount
+        //     date: currentDate, // Current date
+        //   });
+        //   return updatedTransactions;
+        // });
+        alert(`Automate is : ${!automate == true ? "ON" : "OFF"} `);
+        //console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const handleChangeBorrowDate = () =>{
+    const newDate = prompt("Enter Borrow Date : ");
+    axios
+    .post(
+      // `https://bank-backend7.onrender.com/api/borrow/${mobileNumber}/${idx}`
+      // `http://localhost:5000/api/borrow/${mobileNumber}/${idx}`,
+      window.backendUrl + `changeborrowdate/${mobileNumber}/${idx}`,
+      {
+        newBorrowDate: newDate,
+      }
+    )
+    .then((response) => {
+      alert(`Borrow Date is : ${newDate} `);
+      //console.log(response);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   }
 
   return (
@@ -136,6 +202,19 @@ const Lend = () => {
         <div className="Linput-field button">
           <input type="button" value="Deduct" onClick={handleDeduct} />
         </div>
+
+        <button
+          onClick={handleAutomate}
+          className="bg-[#4070f4] text-white font-medium py-3 px-2 rounded-lg fixed left-[12%] bottom-[22%]"
+        >
+          Automate
+        </button>
+        <button
+          onClick={handleChangeBorrowDate}
+          className="bg-[#4070f4] text-white font-medium py-3 px-2 rounded-lg fixed left-[12%] bottom-[12%]"
+        >
+          Change Date
+        </button>
       </div>
     </div>
   );

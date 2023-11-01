@@ -12,10 +12,11 @@ const Borrow = () => {
   const [lend, setLend] = useState(0);
   const [ProfitTill, setProfitTill] = useState(0);
   const [error, setError] = useState("");
+  const [idFromArray, setIdFromArray] = useState("");
   const [names, setName] = useState("");
   const navigate = useNavigate();
-  const [shouldDecrement, setShouldDecrement] = useState(false);
-
+  const [shouldDecrement, setShouldDecrement] = useState([]);
+  const [automate, setAutomate] = useState(false);
   useEffect(() => {
     // Fetch the borrow details from the backend API
     axios
@@ -100,32 +101,34 @@ const Borrow = () => {
     return formattedDate;
   }
 
-  const toggleDecrement = async () => {
-    try {
-      // const response = await fetch("http://localhost:5000/toggle-decrement", {
-      const response = await fetch(window.backendUrl + "toggle-decrement", {
-        mobileNumber: mobileNumber,
-        method: "POST",
-      });
-      if (response.ok) {
-        setShouldDecrement(!shouldDecrement);
-      } else {
-        // Handle the response if there's an error
-        console.error("Request failed with status: " + response.status);
-      }
-    } catch (error) {
-      // Handle any other errors
-      console.error("An error occurred:", error);
-    }
-  };
+  // const toggleDecrement = async (idx) => {
+  //   try {
+  //     // const response = await fetch("http://localhost:5000/toggle-decrement", {
+  //     // const response = await fetch(window.backendUrl + "toggle-decrement", {
+  //     //   mobileNumber: mobileNumber,
+  //     //   method: "POST",
+  //     // });
+  //     // if (response.ok) {
+  //     //   setShouldDecrement(!shouldDecrement);
+  //     // } else {
+  //     //   // Handle the response if there's an error
+  //     //   console.error("Request failed with status: " + response.status);
+  //     // }
+
+  //     setShouldDecrement(!shouldDecrement[idx]);
+  //   } catch (error) {
+  //     // Handle any other errors
+  //     console.error("An error occurred:", error);
+  //   }
+  // };
 
   const handleBorrow = () => {
     const borrowAmount = prompt("Enter the Amount to borrow: ");
 
     if (borrowAmount === null) return;
 
-    const maturityAmount = (borrowAmount * 10) / 9;
-    let idFromArray;
+    let maturityAmount = (borrowAmount * 10) / 9;
+
     if (borrowAmount !== null) {
       // Call the backend API to store the borrow details
       axios
@@ -133,7 +136,8 @@ const Borrow = () => {
         // .post(`http://localhost:5000/api/borrow/${mobileNumber}`, {
         .post(window.backendUrl + `borrow/${mobileNumber}`, {
           amount: borrowAmount,
-          maturityAmount: maturityAmount,
+          maturityAmount: maturityAmount - maturityAmount / 100,
+          Automate: false,
         })
         .then(() => {
           // Fetch the updated borrow details from the backend API
@@ -147,7 +151,42 @@ const Borrow = () => {
                   return arr.Remaining > 0;
                 }
               );
-              idFromArray = filteredAmountArray[filteredAmountArray.length - 1].id;
+
+              //   let idxNew = filteredAmountArray[filteredAmountArray.length - 1].id
+
+              // axios
+              //   .post(
+              //     // `https://bank-backend7.onrender.com/api/borrow/${mobileNumber}/${idx}`
+              //     // `http://localhost:5000/api/borrow/${mobileNumber}/${idx}`,
+              //     window.backendUrl + `borrow/${mobileNumber}/${idxNew}`,
+              //     {
+              //       deductAm: maturityAmount / 100,
+              //     }
+              //   )
+              //   .then((response) => {
+              //     //console.log(response);
+              //     // Update the transactions with the updated item from the response
+              //     // setTransactions((prevTransactions) => {
+              //     //   const updatedTransactions = [...prevTransactions];
+              //     //   const currentDate = new Date().toLocaleDateString();
+
+              //     //   // Add a new transaction to the array with the deducted amount and current date
+              //     //   updatedTransactions.push({
+              //     //     amount: -(parseInt(maturityAmount) / 100), // Deducted amount
+              //     //     date: currentDate, // Current date
+              //     //   });
+              //     //   return updatedTransactions;
+              //     // });
+              //     console.log("*first emi deducted*");
+              //   })
+              //   .catch((error) => {
+              //     console.log(error);
+              //   });
+
+              setIdFromArray(
+                filteredAmountArray[filteredAmountArray.length - 1].id
+              );
+
               // Update borrowList using the filtered amountArray
               setBorrowList({
                 ...response.data,
@@ -175,36 +214,7 @@ const Borrow = () => {
               );
             });
 
-
-
-          axios
-            .post(
-              // `https://bank-backend7.onrender.com/api/borrow/${mobileNumber}/${idx}`
-              // `http://localhost:5000/api/borrow/${mobileNumber}/${idx}`,
-              window.backendUrl + `borrow/${mobileNumber}/${idFromArray}`,
-              {
-                deductAm: parseInt(maturityAmount) / 100,
-              }
-            )
-            .then((response) => {
-              //console.log(response);
-              // Update the transactions with the updated item from the response
-              // setTransactions((prevTransactions) => {
-              //   const updatedTransactions = [...prevTransactions];
-              //   const currentDate = new Date().toLocaleDateString();
-
-              //   // Add a new transaction to the array with the deducted amount and current date
-              //   updatedTransactions.push({
-              //     amount: -(parseInt(maturityAmount) / 100), // Deducted amount
-              //     date: currentDate, // Current date
-              //   });
-              //   return updatedTransactions;
-              // });
-              console.log("*first emi deducted*")
-            })
-            .catch((error) => {
-              console.log(error);
-            });
+          //console.log("idx to be updated is: ", idFromArray , "maturity is : " , (maturityAmount) / 100);
         })
         .catch((error) => {
           console.log(error);
@@ -239,6 +249,13 @@ const Borrow = () => {
   };
 
   const lendAmount = 30000;
+
+  useEffect(() => {
+    if (borrowList?.amountArray?.length !== undefined) {
+      var booleanArray = new Array(borrowList.amountArray.length).fill(false);
+      setShouldDecrement(booleanArray);
+    }
+  }, [borrowList]);
 
   return (
     <div className="Bbody">
@@ -294,9 +311,9 @@ const Borrow = () => {
                       <th style={{ padding: "10px", border: "1px solid #ccc" }}>
                         Date Maturity
                       </th>
-                      <th style={{ padding: "10px", border: "1px solid #ccc" }}>
+                      {/* <th style={{ padding: "10px", border: "1px solid #ccc" }}>
                         Automate
-                      </th>
+                      </th> */}
                       <th style={{ padding: "10px", border: "1px solid #ccc" }}>
                         Actions
                       </th>
@@ -308,7 +325,12 @@ const Borrow = () => {
                       <h1>Loading...</h1>
                     ) : (
                       borrowList.amountArray.map((amount, subIndex) => (
-                        <tr key={subIndex}>
+                        <tr
+                          key={subIndex}
+                          className={
+                            amount.Automate == true ? "bg-green-200" : ""
+                          }
+                        >
                           <td
                             style={{
                               padding: "10px",
@@ -350,16 +372,24 @@ const Borrow = () => {
                           >
                             {get100thDayExcludingSundays(amount.DateBorrow)}
                           </td>
-                          <td
+                          {/* <td
                             style={{
                               padding: "10px",
                               border: "1px solid #ccc",
                             }}
                           >
-                            <button onClick={toggleDecrement}>
-                              {shouldDecrement ? "on" : "off"}
+                            <button
+                              // onClick={() =>
+                              //   setShouldDecrement((prevState) => {
+                              //     const newArray = [...prevState]; // Create a copy of the current state array
+                              //     newArray[subIndex] = !newArray[subIndex]; // Toggle the value at the specified index
+                              //     return newArray; // Set the new array as the updated state
+                              //   })
+                              //}
+                            >
+                              {amount.Automate === true ? "on" : "off"}
                             </button>
-                          </td>
+                          </td> */}
                           <td
                             style={{
                               padding: "10px",
