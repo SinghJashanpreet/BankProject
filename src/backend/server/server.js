@@ -5,11 +5,12 @@ const cors = require("cors");
 const app = express();
 const cron = require("node-cron");
 const { v4: uuidv4 } = require("uuid");
+const jwt = require("jsonwebtoken");
 
 app.use(
   cors({
-    origin: "https://loanappbyjs.netlify.app",
-    //origin: "http://localhost:3000",
+    //origin: "https://loanappbyjs.netlify.app",
+    origin: "http://localhost:3000",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
@@ -442,6 +443,25 @@ app.post("/api/namechange/:mobileNumber/:Nname", async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Error Changing Name" });
+  }
+});
+
+// Replace this with your actual login logic
+app.post("/api/authLogin", (req, res) => {
+  const { email, password } = req.body;
+
+  // Implement your authentication logic here
+  if (email === "a" && password === "a") {
+    const token = jwt.sign(
+      { email },
+      "gchrojsdhtvnjcoeoidtvnhscdoiytvuscndytivncuszdimotuviodnuxtviocmudvinotucnio",
+      {
+        expiresIn: "1h", // Token expiration time (e.g., 1 hour)
+      }
+    );
+    res.status(200).json({ message: "Login successful", token });
+  } else {
+    res.status(401).json({ message: "Login failed" });
   }
 });
 
