@@ -3,7 +3,14 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 function Terminations() {
+  const navigate = useNavigate();
+  useEffect(()=>{
+    if(localStorage.token == undefined){
+      navigate('/')
+    }
+  },[])
   var { dates } = useParams();
   dates = new Date(dates);
   dates = dates.toLocaleDateString();

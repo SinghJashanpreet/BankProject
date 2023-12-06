@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 function convertDateFormat(inputDate) {
@@ -31,6 +32,11 @@ function get100thDayExcludingSundays(startDateStr) {
 
 function PastAccounts() {
   const navigate = useNavigate();
+  useEffect(()=>{
+    if(localStorage.token == undefined){
+      navigate('/')
+    }
+  },[])
   const location = useLocation();
   const {mobileNumber} = useParams()
   // Access the pastList from the location state

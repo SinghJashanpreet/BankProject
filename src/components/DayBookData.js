@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 function DayBookData() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (localStorage.token == undefined) {
+      navigate("/");
+    }
+  }, []);
   const { enteredDate } = useParams();
   const [dataa, setData] = useState([]);
   const [fomatedData, setfomatedData] = useState([]);
@@ -121,7 +128,10 @@ function DayBookData() {
         <div className="Bcontainer example">
           <div className="Bheading">
             <h1 className="font-medium underline" style={{ fontSize: "35px" }}>
-              Day Book-<span style={{ fontSize: "35px" }}>{convertDateFormat2(enteredDate)}</span>
+              Day Book-
+              <span style={{ fontSize: "35px" }}>
+                {convertDateFormat2(enteredDate)}
+              </span>
             </h1>
             {/* {error && <p style={{ color: "red" }}>{error}</p>} */}
           </div>

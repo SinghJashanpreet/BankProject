@@ -2,8 +2,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../css/Lend.css";
 import { useParams } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 const Lend = () => {
+  const navigate = useNavigate();
+  useEffect(()=>{
+    if(localStorage.token == undefined){
+      navigate('/')
+    }
+  },[])
   const { mobileNumber, idx } = useParams();
   const [transactions, setTransactions] = useState([]);
   const [automate, setAutomate] = useState(false);

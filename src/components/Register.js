@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/Register.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,11 @@ import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const navigate = useNavigate();
+  useEffect(()=>{
+    if(localStorage.token == undefined){
+      navigate('/')
+    }
+  },[])
   const [name, setName] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
   const [error, setError] = useState("");

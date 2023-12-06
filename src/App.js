@@ -9,14 +9,17 @@ import DayBookPage from "./components/DayBookPage";
 import DayBookData from "./components/DayBookData";
 import TerminationData from "./components/TerminationData";
 import PastAccounts from "./components/PastAccounts";
+import LoginForm from "./components/Loginform";
 
 const App = () => {
-  window.backendUrl = `https://bank-backend7.onrender.com/api/`;
-  //window.backendUrl = `http://localhost:5000/api/`;
+  //window.backendUrl = `https://bank-backend7.onrender.com/api/`;
+  window.backendUrl = `http://localhost:5000/api/`;
   //window.backendUrlWithoutApi = `https://bank-backend7.onrender.com/`;
   return (
     <Routes>
-      <Route path="/" element={<Main />} />
+      <Route path="/" element={<LoginForm/>} />
+      <Route path="/main" element={<Main/>} />
+
       <Route path="/register" element={<Registration />} />
       <Route path="/login" element={<Login />} />
       <Route path="/daybook" element={<DayBookPage />} />

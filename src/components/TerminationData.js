@@ -1,10 +1,16 @@
 import { React, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 function TerminationData() {
   const { enteredDate } = useParams();
   const [dataa, setData] = useState([]);
   const [fomatedData, setfomatedData] = useState([]);
-
+  const navigate = useNavigate();
+  useEffect(()=>{
+    if(localStorage.token == undefined){
+      navigate('/')
+    }
+  },[])
   function get100thDayExcludingSundays(startDateStr) {
     const startDate = new Date(startDateStr);
     const oneDayInMilliseconds = 24 * 60 * 60 * 1000; // Number of milliseconds in a day

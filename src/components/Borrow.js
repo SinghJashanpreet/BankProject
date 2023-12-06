@@ -15,6 +15,11 @@ const Borrow = () => {
   const [idFromArray, setIdFromArray] = useState("");
   const [names, setName] = useState("");
   const navigate = useNavigate();
+  useEffect(()=>{
+    if(localStorage.token == undefined){
+      navigate('/')
+    }
+  },[])
   const [shouldDecrement, setShouldDecrement] = useState([]);
   const [automate, setAutomate] = useState(false);
   useEffect(() => {

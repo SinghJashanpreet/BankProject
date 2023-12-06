@@ -1,9 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 function DayBookPage() {
   const [enteredDate, setEnteredDate] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(()=>{
+    if(localStorage.token == undefined){
+      navigate('/')
+    }
+  },[])
   const clickHandler = () => {
     navigate(`/daybookdata/${enteredDate}`);
   };

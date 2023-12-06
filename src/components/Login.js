@@ -10,7 +10,15 @@ const Login = () => {
   const [error, setError] = useState("");
   const [enteredDate, setEnteredDate] = useState(null);
   const [nameData, setNameData] = useState([]);
+
+
   const navigate = useNavigate();
+  useEffect(()=>{
+    if(localStorage.token == undefined){
+      navigate('/')
+    }
+  },[])
+
 
   useEffect(()=>{
     const doit = async() =>{
