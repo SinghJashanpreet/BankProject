@@ -18,7 +18,7 @@ app.use(
 const port = process.env.PORT || 5000;
 
 const username = encodeURIComponent("officialkhalsajs");
-const password = encodeURIComponent("J@sh@njo0");
+const password = encodeURIComponent(process.env.password);
 const dbName = "Borrows"; // Replace 'your-database-name' with your actual database name
 
 const uri = `mongodb+srv://${username}:${password}@cluster0.cutxstq.mongodb.net/${dbName}?retryWrites=true&w=majority`;
