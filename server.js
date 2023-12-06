@@ -9,8 +9,8 @@ const jwt = require("jsonwebtoken");
 
 app.use(
   cors({
-    //origin: "https://loanappbyjs.netlify.app",
-    origin: "http://localhost:3000",
+    origin: "https://loanappbyjs.netlify.app",
+    //origin: "http://localhost:3000",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   })
 );
