@@ -12,8 +12,8 @@ import PastAccounts from "./components/PastAccounts";
 import LoginForm from "./components/Loginform";
 
 const App = () => {
-  //window.backendUrl = `https://bank-backend7.onrender.com/api/`;
-  window.backendUrl = `http://localhost:5000/api/`;
+  window.backendUrl = `https://bank-backend7.onrender.com/api/`;
+  //window.backendUrl = `http://localhost:5000/api/`;
   //window.backendUrlWithoutApi = `https://bank-backend7.onrender.com/`;
   return (
     <Routes>
