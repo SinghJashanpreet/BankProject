@@ -12,7 +12,7 @@ function get100thDayExcludingSundays(startDateStr) {
   const oneDayInMilliseconds = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
   let count = 0;
 
-  while (count < 100) {
+  while (count < 99) {
     startDate.setTime(startDate.getTime() + oneDayInMilliseconds);
 
     if (startDate.getDay() !== 0) {
